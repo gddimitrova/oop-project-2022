@@ -15,7 +15,7 @@ public:
 	MyString();
 	MyString(const char* newString, size_t newLen);
 	MyString(const MyString& other);
-	MyString operator=(const MyString& other);
+	MyString& operator=(const MyString& other);
 	~MyString();
 
 };
