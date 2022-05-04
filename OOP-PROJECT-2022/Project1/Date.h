@@ -1,5 +1,6 @@
 #ifndef DATE_H_INCLUDED
 #define DATE_H_INCLUDED
+#include <fstream>
 
 class Date
 {
@@ -11,6 +12,8 @@ private:
 public:
 	Date();
 	Date(int year, int month, int day);
+	
+	friend std::ostream& operator<<(std::ostream& out, const Date& rhs);
 
 };
 
