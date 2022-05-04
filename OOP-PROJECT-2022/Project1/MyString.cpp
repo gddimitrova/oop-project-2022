@@ -50,7 +50,7 @@ MyString::~MyString()
 
 std::ostream& operator<<(std::ostream& out, const MyString& rhs)
 {
-	out << rhs.getString() << std::endl;
+	out << rhs.getString();
 
 	return out;
 }
