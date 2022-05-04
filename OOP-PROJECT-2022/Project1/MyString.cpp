@@ -14,29 +14,23 @@ void MyString::copyDynamic(char*& destinaton, const char* source)
 		destinaton = nullptr;
 }
 
-void MyString::copyFrom(const char* otherString, size_t otherLen)
-{
-	mLength = otherLen;
-	copyDynamic(mString, otherString);
-}
-
 void MyString::free()
 {
 	delete[] mString;
 }
 
-MyString::MyString(): mLength(DEFAULT_LENGHT) 
+MyString::MyString()
 {
-	mString = new char[mLength + 1];
+	mString = new char[DEFAULT_LENGHT];
 	mString[0] = '\0';
 }
 
-MyString::MyString(const char* newString, size_t newLen)
+MyString::MyString(const char* newString)
 {
-	copyFrom(newString, newLen);
+	copyDynamic(mString, newString);
 }
 
-MyString::MyString(const MyString& other): MyString(other.mString, other.mLength)
+MyString::MyString(const MyString& other) : MyString(other.mString)
 {
 }
 
@@ -44,7 +38,7 @@ MyString& MyString::operator=(const MyString& other)
 {
 	if (this != &other) {
 		free();
-		copyFrom(other.mString, other.mLength);
+		copyDynamic(mString, other.mString);
 	}
 	return *this;
 }
@@ -52,4 +46,11 @@ MyString& MyString::operator=(const MyString& other)
 MyString::~MyString()
 {
 	free();
+}
+
+std::ostream& operator<<(std::ostream& out, const MyString& rhs)
+{
+	out << rhs.getString() << std::endl;
+
+	return out;
 }

@@ -1,22 +1,26 @@
 #ifndef MYSTRING_H_INCLUDED
 #define MYSTRING_H_INCLUDED
-
+#include <cstring>
+#include <fstream>
 
 class MyString
 {
 private:
 	char* mString;
-	size_t mLength;
 	
 	void copyDynamic(char*& destinaton, const char* source);
-	void copyFrom(const char* otherString, size_t otherLen);
 	void free();
 public:
 	MyString();
-	MyString(const char* newString, size_t newLen);
+	MyString(const char* newString);
 	MyString(const MyString& other);
 	MyString& operator=(const MyString& other);
 	~MyString();
+
+	size_t getLength() const { return strlen(mString); }
+	const char* getString() const { return mString; }
+
+	friend std::ostream& operator<<(std::ostream& out, const MyString& rhs);
 
 };
 
