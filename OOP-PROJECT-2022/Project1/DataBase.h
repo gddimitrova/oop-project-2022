@@ -9,9 +9,11 @@ private:
 	MyString mPassword;
 	MyString mEmail;
 
+
 public:
 	DataBase(const char* userName, const char* password, const char* email);
 
+	bool isValidName(const char* userName) const;
 };
 
 

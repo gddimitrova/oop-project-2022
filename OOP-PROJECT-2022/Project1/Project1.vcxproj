@@ -139,11 +139,13 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="DataBase.cpp" />
     <ClCompile Include="Date.cpp" />
     <ClCompile Include="MyString.cpp" />
     <ClCompile Include="Source.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="DataBase.h" />
     <ClInclude Include="Date.h" />
     <ClInclude Include="MyString.h" />
   </ItemGroup>
