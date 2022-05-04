@@ -11,6 +11,7 @@ private:
 public:
 	Date();
 	Date(int year, int month, int day);
+
 };
 
 #endif
