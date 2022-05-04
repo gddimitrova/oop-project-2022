@@ -1,15 +1,12 @@
 #include <iostream>
 #include "MyString.h"
+#include "Date.h"
+
 int main() {
-	const char* temp = "Geri";
-	MyString str(temp);
 
-	std::cout << str.getLength() << std::endl;
+	Date first(1,15,2001);
 
-	str = "Dimitrova";
+	std::cout << first;
 
-	std::cout << str.getLength() << std::endl;
-
-	std::cout << str;
 	return 0;
 }
