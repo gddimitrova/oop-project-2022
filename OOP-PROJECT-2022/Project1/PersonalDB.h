@@ -30,6 +30,8 @@ public:
 	friend std::ostream& operator<<(std::ostream& out, const PersonalDB& rhs);
 	
 	bool validDates(const Date& start, const Date& end) const;
+	bool validGrade(size_t grade) const { return grade >= 1 && grade <= 5; }
+	bool validPhotos(const char** photos, size_t size) const;
 };
 
 #endif

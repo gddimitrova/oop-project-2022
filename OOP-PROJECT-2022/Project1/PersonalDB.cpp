@@ -57,7 +57,7 @@ PersonalDB::PersonalDB(size_t capacity)
 }
 
 PersonalDB::PersonalDB(const char* destination, int day, int month, int year, int dayEnd, int monthEnd, int yearEnd, size_t grade, const char* comment, const char** photos, size_t size)
-	:mDestination(destination), mGrade(grade), mComment(comment), mCapacity(DEFAULT_CAP)
+	:mDestination(destination), mComment(comment), mCapacity(DEFAULT_CAP)
 {
 	Date start(year, month, day), end(yearEnd, monthEnd, dayEnd);
 
@@ -66,6 +66,13 @@ PersonalDB::PersonalDB(const char* destination, int day, int month, int year, in
 	mStart = start;
 	mEnd = end;
 
+	if (!validGrade(grade))
+		throw std::exception("Invalid grade!");
+	mGrade = grade;
+
+	if (!validPhotos(photos, size)) {
+		throw std::exception("Invalid photo format!");
+	}
 	copyFrom(photos, size);
 }
 
@@ -98,6 +105,32 @@ bool PersonalDB::validDates(const Date& start, const Date& end) const
 			(start.getDay() <= end.getDay() && start.getMonth() > end.getMonth() && start.getYear() < end.getYear()) ||
 			(start.getDay() > end.getDay() && start.getMonth() > end.getMonth() && start.getYear() < end.getYear()));
 
+}
+
+bool validExtension(const char* photo) {
+	int i = 0;
+	while (photo[i] != '\0') {
+		if (photo[i] == '.') {
+			i++;
+			return (strcmp((photo + i), "jpeg") == 0) || (strcmp((photo + i), "png") == 0);
+		}
+		if (!(isalpha(photo[i]) || photo[i] == '_') || photo[i] == ' ') {
+			return false;
+		}
+		i++;
+	}
+
+	return false;
+}
+
+bool PersonalDB::validPhotos(const char** photos, size_t size) const
+{
+	for (size_t i = 0; i < size; i++) {
+		if (!validExtension(photos[i]))
+			return false;
+	}
+
+	return true;
 }
 
 std::ostream& operator<<(std::ostream& out, const PersonalDB& rhs)
