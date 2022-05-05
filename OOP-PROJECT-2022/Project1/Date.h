@@ -15,6 +15,8 @@ public:
 	
 	friend std::ostream& operator<<(std::ostream& out, const Date& rhs);
 
+	bool isValidDate(int day, int month, int year) const;
+
 };
 
 #endif

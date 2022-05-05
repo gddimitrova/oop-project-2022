@@ -21,14 +21,27 @@ int main() {
 	//std::ofstream outFile("DataBase.db", std::ios::app);
 	//outFile << one;
 
-	const char* photos[] = { "photo1.jpeg","photo2.png" };
-	PersonalDB one("Burgas", 1, 12, 2001, 12, 12, 2001, 5, "lovely place", photos, 2);
-	std::cout << one << std::endl;
+	//const char* photos[] = { "photo1.jpeg","photo2.png" };
+	//PersonalDB one("Burgas", 1, 12, 2001, 12, 12, 2001, 5, "lovely place", photos, 2);
+	//std::cout << one << std::endl;
 
-	const char* photos1[] = { "newPhoto.png", "another.jpeg" };
-	PersonalDB two = one;
-	std::cout << two;
-	
+	//const char* photos1[] = { "newPhoto.png", "another.jpeg" };
+	//PersonalDB two = one;
+	//std::cout << two;
+
+	try {
+		Date one(2022, 5, 5);
+	}
+	catch (const std::exception& ex) {
+		std::cerr << "Exception has been caught: " << ex.what() << std::endl;
+	}
+
+	try {
+		Date two(2022, 2, 29);
+	}
+	catch (const std::exception& ex) {
+		std::cerr << "Exception has been caught: " << ex.what() << std::endl;
+	}
 
 	return 0;
 }
