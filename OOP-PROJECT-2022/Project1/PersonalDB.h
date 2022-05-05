@@ -28,6 +28,8 @@ public:
 	~PersonalDB();
 
 	friend std::ostream& operator<<(std::ostream& out, const PersonalDB& rhs);
+	
+	bool validDates(const Date& start, const Date& end) const;
 };
 
 #endif

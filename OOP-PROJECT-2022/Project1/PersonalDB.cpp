@@ -57,8 +57,15 @@ PersonalDB::PersonalDB(size_t capacity)
 }
 
 PersonalDB::PersonalDB(const char* destination, int day, int month, int year, int dayEnd, int monthEnd, int yearEnd, size_t grade, const char* comment, const char** photos, size_t size)
-	:mDestination(destination), mStart(year,month, day), mEnd(yearEnd, monthEnd, dayEnd), mGrade(grade), mComment(comment), mCapacity(DEFAULT_CAP)
+	:mDestination(destination), mGrade(grade), mComment(comment), mCapacity(DEFAULT_CAP)
 {
+	Date start(year, month, day), end(yearEnd, monthEnd, dayEnd);
+
+	if (!validDates(start, end))
+		throw std::exception("Invalid dates!");
+	mStart = start;
+	mEnd = end;
+
 	copyFrom(photos, size);
 }
 
@@ -81,6 +88,16 @@ PersonalDB& PersonalDB::operator=(const PersonalDB& other)
 PersonalDB::~PersonalDB()
 {
 	free();
+}
+
+bool PersonalDB::validDates(const Date& start, const Date& end) const
+{
+	return (start.getYear() <= end.getYear()) &&
+			((start.getDay() <= end.getDay() && start.getMonth() <= end.getMonth()) ||
+			(start.getDay() > end.getDay() && start.getMonth() < end.getMonth()) ||
+			(start.getDay() <= end.getDay() && start.getMonth() > end.getMonth() && start.getYear() < end.getYear()) ||
+			(start.getDay() > end.getDay() && start.getMonth() > end.getMonth() && start.getYear() < end.getYear()));
+
 }
 
 std::ostream& operator<<(std::ostream& out, const PersonalDB& rhs)

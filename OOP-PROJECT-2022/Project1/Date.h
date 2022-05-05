@@ -17,6 +17,10 @@ public:
 
 	bool isValidDate(int day, int month, int year) const;
 
+	int getDay() const { return mDay; }
+	int getMonth() const { return mMonth; }
+	int getYear() const { return mYear; }
+
 };
 
 #endif
