@@ -142,12 +142,14 @@
     <ClCompile Include="DataBase.cpp" />
     <ClCompile Include="Date.cpp" />
     <ClCompile Include="MyString.cpp" />
+    <ClCompile Include="PersonalDB.cpp" />
     <ClCompile Include="Source.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="DataBase.h" />
     <ClInclude Include="Date.h" />
     <ClInclude Include="MyString.h" />
+    <ClInclude Include="PersonalDB.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

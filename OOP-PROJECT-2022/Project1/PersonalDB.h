@@ -15,15 +15,19 @@ private:
 	size_t mSize;
 	size_t mCapacity;
 
-	void copyFrom(const char** photos, size_t size, size_t capacity);
+	void copyFrom(const char** photos, size_t size);
 	void copyFromOther(const PersonalDB& other);
 	void free();
+	void resize(size_t newSize);
 
 public:
+	PersonalDB(size_t capacity);
 	PersonalDB(const char* destination, int day, int month, int year, int dayEnd, int monthEnd, int yearEnd, size_t grade, const char* comment, const char** photos, size_t size);
 	PersonalDB(const PersonalDB& other);
 	PersonalDB& operator=(const PersonalDB& other);
 	~PersonalDB();
+
+	friend std::ostream& operator<<(std::ostream& out, const PersonalDB& rhs);
 };
 
 #endif
