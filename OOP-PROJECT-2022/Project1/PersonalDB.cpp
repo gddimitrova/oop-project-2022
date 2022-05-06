@@ -1,7 +1,7 @@
 #include "PersonalDB.h"
 #define DEFAULT_CAP 8
 
-void PersonalDB::copyFrom(const char** photos, size_t size)
+void PersonalDB::copyFrom(char** photos, size_t size)
 {
 	resize(size);
 
@@ -56,10 +56,10 @@ PersonalDB::PersonalDB(size_t capacity)
 	mPhotos = new MyString[mCapacity];
 }
 
-PersonalDB::PersonalDB(const char* destination, int day, int month, int year, int dayEnd, int monthEnd, int yearEnd, size_t grade, const char* comment, const char** photos, size_t size)
-	:mDestination(destination), mComment(comment), mCapacity(DEFAULT_CAP)
+PersonalDB::PersonalDB(const char* destination, int day, int month, int year, int dayEnd, int monthEnd, int yearEnd , size_t grade, const char* comment, char** photos, size_t size)
+	:mDestination(destination),mComment(comment), mCapacity(DEFAULT_CAP)
 {
-	Date start(year, month, day), end(yearEnd, monthEnd, dayEnd);
+	Date start(day, month, year), end(dayEnd, monthEnd, yearEnd);
 
 	if (!validDates(start, end))
 		throw std::exception("Invalid dates!");
@@ -107,7 +107,7 @@ bool PersonalDB::validDates(const Date& start, const Date& end) const
 
 }
 
-bool validExtension(const char* photo) {
+bool validExtension(char* photo) {
 	int i = 0;
 	while (photo[i] != '\0') {
 		if (photo[i] == '.') {
@@ -123,7 +123,7 @@ bool validExtension(const char* photo) {
 	return false;
 }
 
-bool PersonalDB::validPhotos(const char** photos, size_t size) const
+bool PersonalDB::validPhotos(char** photos, size_t size) const
 {
 	for (size_t i = 0; i < size; i++) {
 		if (!validExtension(photos[i]))

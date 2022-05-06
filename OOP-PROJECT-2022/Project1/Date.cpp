@@ -44,3 +44,15 @@ std::ostream& operator<<(std::ostream& out, const Date& other)
 
     return out;
 }
+
+std::istream& operator>>(std::istream& in, Date& rhs)
+{
+    int day, month, year;
+    char ch;
+    in >> year >> ch >> month >> ch >> day;
+    rhs.setDay(day);
+    rhs.setMonth(month);
+    rhs.setYear(year);
+
+    return in;
+}
