@@ -19,6 +19,25 @@ void freeMemory(const char* user, const char* pass, const char* email) {
 	delete[] email;
 }
 
+template <typename T>
+void dateValidation(const char* description, T& argument) {
+	bool caught;
+	do {
+		caught = false;
+		std::cout << description;
+		std::cin >> argument;
+
+		try {
+			T newArgument = argument;
+		}
+		catch (std::exception& ex) {
+			std::cerr << ex.what() << std::endl;
+			caught = true;
+		}
+	} while (caught);
+}
+
+
 void addNewExperience(const char* userName) {
 	std::ofstream outFile(userName, std::ios::app);
 	char* destination, * comment, ** photos;
@@ -35,34 +54,10 @@ void addNewExperience(const char* userName) {
 	std::cout << "Please enter time period in the following format - YYYY-MM-DD!" << std::endl;
 
 	bool exCaught;
-	do {
-		exCaught = false;
-		std::cout << "Start: ";
-		std::cin >> start;
-
-		try {
-			Date newStart = start;
-		}
-		catch (std::exception& ex) {
-			std::cerr << ex.what() << std::endl;
-			exCaught = true;
-		}
-	} while (exCaught);
+	dateValidation<Date>("Start: ", start);
 	newPerson.setStart(start);
 
-	do {
-		exCaught = false;
-		std::cout << "End: ";
-		std::cin >> end;
-
-		try {
-			Date newEnd = end;
-		}
-		catch (std::exception& ex) {
-			std::cerr << ex.what() << std::endl;
-			exCaught = true;
-		}
-	} while (exCaught);
+	dateValidation<Date>("End: ", end);
 	newPerson.setEnd(end);
 
 	do {
@@ -111,35 +106,16 @@ void addNewExperience(const char* userName) {
 		}
 	} while (exCaught);
 	
-	std::cout << std::endl << newPerson;
-	//std::cout << "End: ";
-	//std::cin >> end;
+	outFile<<newPerson;
 
-	//std::cout << "Please enter your grade: ";
-	//std::cin >> grade;
+	outFile.close();
 
-	//std::cout << "Please leave a comment about this destination: ";
-	//comment = new char[MAX_LEN * 2];
-	//std::cin.getline(comment, MAX_LEN * 2);
-
-	//std::cout << "How many photos would you like to upload? : ";
-	//std::cin >> size;
-	//photos = new char* [size];
-	//for (size_t i = 0; i < size; i++) {
-	//	photos[i] = new char[MAX_LEN];
-	//	std::cin.getline(photos[i], MAX_LEN);
-	//}
-
-	//bool exceptionCaught = false;
-
-
-	////TODO да си довърша хендълването на грешки при съзадаването на PersonalDB
-	//try {
-	//	PersonalDB newPerson(destination, start, end, grade, comment,photos, size);
-	//}
-	//catch (std::exception& ex) {
-	//	std::cerr << ex.what() << std::endl;
-	//}
+	delete[] destination;
+	delete[] comment;
+	for (size_t i = 0; i < size; i++) {
+		delete photos[i];
+	}
+	delete[] photos;
 }
 
 void signUp() {
@@ -256,14 +232,18 @@ int main() {
 		std::cerr << "Exception has been caught: " << ex.what() << std::endl;
 	}*/
 
-	std::cout << "Hello! Welcome to the travellers diary" << std::endl;
+	/*std::cout << "Hello! Welcome to the travellers diary" << std::endl;
 	std::cout << "Choose your next operation: login / register" << std::endl;
 
 	char operation[9];
 	std::cin >> operation;
 	std::cin.ignore();
 
-	(strcmp(operation, "login") == 0) ? login() : signUp();
+	(strcmp(operation, "login") == 0) ? login() : signUp();*/
+
+	MyString str;
+	std::cin >> str;
+	std::cout << str;
 
 	return 0;
 }

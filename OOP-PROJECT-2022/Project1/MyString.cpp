@@ -64,3 +64,15 @@ std::ostream& operator<<(std::ostream& out, const MyString& rhs)
 
 	return out;
 }
+
+std::istream& operator>>(std::istream& in, MyString& rhs)
+{
+	char* str = new char[2048];
+	in.getline(str,2048,'\t');
+	int len = strlen(str);
+	rhs.mString = new char[len + 1];
+	strcpy_s(rhs.mString, len + 1, str);
+	delete[] str;
+
+	return in;
+}

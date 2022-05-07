@@ -164,14 +164,15 @@ void PersonalDB::setPhotos(char** photos, size_t size)
 
 std::ostream& operator<<(std::ostream& out, const PersonalDB& rhs)
 {
-	out << "Destination:" << rhs.mDestination << std::endl;
-	out << "Time period:" << rhs.mStart << " - " << rhs.mEnd << std::endl;
-	out << "Grade:" << rhs.mGrade << std::endl;
-	out << "Comment:" << rhs.mComment << std::endl;
-	out	<< "Photos:";
+	out << rhs.mDestination << "	";
+	out << rhs.mStart << "	" << rhs.mEnd <<"	";
+	out << rhs.mGrade << "	";
+	out << rhs.mComment << "	";
+	out << rhs.mSize << "	";
 	for (size_t i = 0; i < rhs.mSize; i++) {
-		out << rhs.mPhotos[i] << " ";
+		out << rhs.mPhotos[i] << "	";
 	}
+	out << std::endl;
 
 	return out;
 }
