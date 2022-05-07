@@ -22,6 +22,9 @@ public:
 
 	friend std::ostream& operator<<(std::ostream& out, const MyString& rhs);
 
+	bool operator==(const MyString& other);
+	bool operator!=(const MyString& other);
+
 };
 
 #endif 

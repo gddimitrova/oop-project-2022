@@ -8,7 +8,7 @@
 #define MAX_LEN 1024
 
 
-//TODO да си видя const char** photos-ите, да си дооправя добавянето на записки, да си направя логина, да си оправя конструктора на PersonalDB да приема Date вместо int
+//TODO да си видя const char** photos-ите, да си дооправя добавянето на записки, да си направя логина
 void login() {
 
 }
@@ -24,41 +24,122 @@ void addNewExperience(const char* userName) {
 	char* destination, * comment, ** photos;
 	size_t grade, size;
 	Date start, end;
+	PersonalDB newPerson;
 
 	std::cin.ignore();
 	std::cout << "Please enter destination: ";
 	destination = new char[MAX_LEN];
 	std::cin.getline(destination, MAX_LEN);
+	newPerson.setDestination(destination);
 
 	std::cout << "Please enter time period in the following format - YYYY-MM-DD!" << std::endl;
-	std::cout << "Start: ";
-	std::cin >> start;
-	std::cout << "End: ";
-	std::cin >> end;
 
-	std::cout << "Please enter your grade: ";
-	std::cin >> grade;
+	bool exCaught;
+	do {
+		exCaught = false;
+		std::cout << "Start: ";
+		std::cin >> start;
 
+		try {
+			Date newStart = start;
+		}
+		catch (std::exception& ex) {
+			std::cerr << ex.what() << std::endl;
+			exCaught = true;
+		}
+	} while (exCaught);
+	newPerson.setStart(start);
+
+	do {
+		exCaught = false;
+		std::cout << "End: ";
+		std::cin >> end;
+
+		try {
+			Date newEnd = end;
+		}
+		catch (std::exception& ex) {
+			std::cerr << ex.what() << std::endl;
+			exCaught = true;
+		}
+	} while (exCaught);
+	newPerson.setEnd(end);
+
+	do {
+		exCaught = false;
+		std::cout << "Grade: ";
+		std::cin >> grade;
+
+		try {
+			newPerson.setGrade(grade);
+		}
+		catch (std::exception& ex) {
+			std::cerr << ex.what() << std::endl;
+			exCaught = true;
+		}
+	} while (exCaught);
+	newPerson.setGrade(grade);
+
+	std::cin.ignore();
 	std::cout << "Please leave a comment about this destination: ";
 	comment = new char[MAX_LEN * 2];
 	std::cin.getline(comment, MAX_LEN * 2);
+	newPerson.setComment(comment);
 
 	std::cout << "How many photos would you like to upload? : ";
 	std::cin >> size;
-	photos = new char* [size];
-	for (size_t i = 0; i < size; i++) {
-		std::cin.getline(photos[i], MAX_LEN);
-	}
+	std::cin.ignore();
+	do {
+		exCaught = false;
+		photos = new char* [size];
+		for (size_t i = 0; i < size; i++) {
+			std::cout << "Add new photo: ";
+			photos[i] = new char[MAX_LEN];
+			std::cin.getline(photos[i], MAX_LEN);
+		}
+		try {
+			newPerson.setPhotos(photos, size);
+		}
+		catch (std::exception& ex)
+		{
+			for (size_t i = 0; i < size; i++) {
+				delete photos[i];
+			}
+			delete[] photos;
+			std::cerr << ex.what() << std::endl;
+			exCaught = true;
+		}
+	} while (exCaught);
+	
+	std::cout << std::endl << newPerson;
+	//std::cout << "End: ";
+	//std::cin >> end;
 
-	bool exceptionCaught = false;
+	//std::cout << "Please enter your grade: ";
+	//std::cin >> grade;
 
-	//TODO да си довърша хендълването на грешки при съзадаването на PersonalDB
-	try {
-		PersonalDB newPerson(destination, start.getDay(),start.getMonth(),start.getYear(), end.getDay(),end.getMonth(),end.getYear(), grade, comment,photos, size);
-	}
-	catch (std::exception& ex) {
-		std::cerr << ex.what() << std::endl;
-	}
+	//std::cout << "Please leave a comment about this destination: ";
+	//comment = new char[MAX_LEN * 2];
+	//std::cin.getline(comment, MAX_LEN * 2);
+
+	//std::cout << "How many photos would you like to upload? : ";
+	//std::cin >> size;
+	//photos = new char* [size];
+	//for (size_t i = 0; i < size; i++) {
+	//	photos[i] = new char[MAX_LEN];
+	//	std::cin.getline(photos[i], MAX_LEN);
+	//}
+
+	//bool exceptionCaught = false;
+
+
+	////TODO да си довърша хендълването на грешки при съзадаването на PersonalDB
+	//try {
+	//	PersonalDB newPerson(destination, start, end, grade, comment,photos, size);
+	//}
+	//catch (std::exception& ex) {
+	//	std::cerr << ex.what() << std::endl;
+	//}
 }
 
 void signUp() {

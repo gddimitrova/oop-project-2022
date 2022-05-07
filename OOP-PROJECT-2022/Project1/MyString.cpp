@@ -48,6 +48,16 @@ MyString::~MyString()
 	free();
 }
 
+bool MyString::operator==(const MyString& other)
+{
+	return strcmp(mString, other.mString)==0;
+}
+
+bool MyString::operator!=(const MyString& other)
+{
+	return !(mString==other.mString);
+}
+
 std::ostream& operator<<(std::ostream& out, const MyString& rhs)
 {
 	out << rhs.getString();

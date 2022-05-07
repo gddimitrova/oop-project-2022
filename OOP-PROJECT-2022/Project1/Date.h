@@ -12,6 +12,7 @@ private:
 public:
 	Date();
 	Date(int year, int month, int day);
+	Date(const Date& other);
 	
 	friend std::ostream& operator<<(std::ostream& out, const Date& rhs);
 	friend std::istream& operator>>(std::istream& in, Date& rhs);

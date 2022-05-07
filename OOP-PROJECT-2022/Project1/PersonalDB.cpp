@@ -56,10 +56,9 @@ PersonalDB::PersonalDB(size_t capacity)
 	mPhotos = new MyString[mCapacity];
 }
 
-PersonalDB::PersonalDB(const char* destination, int day, int month, int year, int dayEnd, int monthEnd, int yearEnd , size_t grade, const char* comment, char** photos, size_t size)
+PersonalDB::PersonalDB(const char* destination, const Date& start, const Date& end, size_t grade, const char* comment,char** photos, size_t size)
 	:mDestination(destination),mComment(comment), mCapacity(DEFAULT_CAP)
 {
-	Date start(day, month, year), end(dayEnd, monthEnd, yearEnd);
 
 	if (!validDates(start, end))
 		throw std::exception("Invalid dates!");
@@ -107,7 +106,7 @@ bool PersonalDB::validDates(const Date& start, const Date& end) const
 
 }
 
-bool validExtension(char* photo) {
+bool validExtension(const char* photo) {
 	int i = 0;
 	while (photo[i] != '\0') {
 		if (photo[i] == '.') {
@@ -131,6 +130,36 @@ bool PersonalDB::validPhotos(char** photos, size_t size) const
 	}
 
 	return true;
+}
+
+void PersonalDB::setDestination(const char* destination)
+{
+	mDestination = destination;
+}
+
+void PersonalDB::setStart(const Date& start)
+{
+	mStart = start;
+}
+
+void PersonalDB::setEnd(const Date& end)
+{
+	mEnd = end;
+}
+
+void PersonalDB::setGrade(size_t grade)
+{
+	if (!validGrade(grade))
+		throw std::exception("Invalid grade!");
+	mGrade = grade;
+}
+
+void PersonalDB::setPhotos(char** photos, size_t size)
+{
+	if (!validPhotos(photos, size)) {
+		throw std::exception("Invalid photo format!");
+	}
+	copyFrom(photos, size);
 }
 
 std::ostream& operator<<(std::ostream& out, const PersonalDB& rhs)

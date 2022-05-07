@@ -22,7 +22,7 @@ private:
 
 public:
 	PersonalDB(size_t capacity);
-	PersonalDB(const char* destination = nullptr, int day = 1, int month = 1, int year = 1, int dayEnd = 1, int monthEnd = 1, int yearEnd = 1, size_t grade = 1, const char* comment = nullptr,char** photos = nullptr, size_t size = 0);
+	PersonalDB(const char* destination = nullptr, const Date& start=Date(1,1,1), const Date& end=Date(1,1,1), size_t grade = 1, const char* comment = nullptr,char** photos = nullptr, size_t size = 0);
 	PersonalDB(const PersonalDB& other);
 	PersonalDB& operator=(const PersonalDB& other);
 	~PersonalDB();
@@ -32,6 +32,13 @@ public:
 	bool validDates(const Date& start, const Date& end) const;
 	bool validGrade(size_t grade) const { return grade >= 1 && grade <= 5; }
 	bool validPhotos(char** photos, size_t size) const;
+
+	void setDestination(const char* destination);
+	void setStart(const Date& start);
+	void setEnd(const Date& end);
+	void setGrade(size_t grade);
+	void setPhotos(char** photos, size_t size);
+	void setComment(const char* comment) { mComment = comment; }
 };
 
 #endif
