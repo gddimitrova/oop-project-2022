@@ -2,6 +2,7 @@
 #include <iostream>
 
 #define DEFAULT_LENGHT 10
+#define MAX_LEN 2048
 
 void MyString::copyDynamic(char*& destinaton, const char* source)
 {
@@ -60,19 +61,18 @@ bool MyString::operator!=(const MyString& other)
 
 std::ostream& operator<<(std::ostream& out, const MyString& rhs)
 {
-	out << rhs.getString();
+	out <<rhs.getLength()<<" "<< rhs.getString();
 
 	return out;
 }
 
 std::istream& operator>>(std::istream& in, MyString& rhs)
 {
-	char* str = new char[2048];
-	in.getline(str,2048,'\t');
-	int len = strlen(str);
+	size_t len;
+	in >> len;
 	rhs.mString = new char[len + 1];
-	strcpy_s(rhs.mString, len + 1, str);
-	delete[] str;
+	in.ignore();
+	in.getline(rhs.mString, len + 1);
 
 	return in;
 }

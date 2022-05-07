@@ -1,4 +1,4 @@
-#ifndef MYSTRING_H_INCLUDED
+﻿#ifndef MYSTRING_H_INCLUDED
 #define MYSTRING_H_INCLUDED
 #include <cstring>
 #include <fstream>
@@ -21,6 +21,7 @@ public:
 	const char* getString() const { return mString; }
 
 	friend std::ostream& operator<<(std::ostream& out, const MyString& rhs);
+	//нещо не е окей, TODO за утре
 	friend std::istream& operator>>(std::istream& in, MyString& rhs);
 
 	bool operator==(const MyString& other);

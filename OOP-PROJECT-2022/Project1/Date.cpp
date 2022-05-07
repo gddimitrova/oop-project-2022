@@ -53,6 +53,7 @@ std::istream& operator>>(std::istream& in, Date& rhs)
 {
     int day, month, year;
     char ch;
+    //in.ignore();
     in >> year >> ch >> month >> ch >> day;
     rhs.setDay(day);
     rhs.setMonth(month);

@@ -22,9 +22,9 @@ bool DataBase::isValidName(const char* userName) const
 
 std::ostream& operator<<(std::ostream& out, const DataBase& rhs)
 {
-    out << rhs.mUserName.getLength() << " " << rhs.mUserName << " "
-        << rhs.mPassword.getLength() << " " << rhs.mPassword << " "
-        << rhs.mEmail.getLength() << " " << rhs.mEmail << std::endl;
+    out << rhs.mUserName << " "
+        << rhs.mPassword << " "
+        << rhs.mEmail << std::endl;
 
     return out;
 }

@@ -1,5 +1,6 @@
-#include "PersonalDB.h"
+﻿#include "PersonalDB.h"
 #define DEFAULT_CAP 8
+#define MAX_LEN 2048
 
 void PersonalDB::copyFrom(char** photos, size_t size)
 {
@@ -96,6 +97,25 @@ PersonalDB::~PersonalDB()
 	free();
 }
 
+//тоттално не е окей, TODO утре
+void PersonalDB::readFromFile(const char* filename)
+{
+	std::ifstream inFile(filename, std::ios::in);
+	inFile >> mDestination;
+	inFile >> mStart;
+	inFile >> mEnd;
+	inFile >> mGrade;
+	inFile >> mComment;
+
+	size_t size;
+	inFile >> size;
+	mSize = size;
+	for (size_t i = 0; i < mSize; i++) {
+		inFile >> mPhotos[i];
+	}
+
+}
+
 bool PersonalDB::validDates(const Date& start, const Date& end) const
 {
 	return (start.getYear() <= end.getYear()) &&
@@ -164,13 +184,13 @@ void PersonalDB::setPhotos(char** photos, size_t size)
 
 std::ostream& operator<<(std::ostream& out, const PersonalDB& rhs)
 {
-	out << rhs.mDestination << "	";
-	out << rhs.mStart << "	" << rhs.mEnd <<"	";
-	out << rhs.mGrade << "	";
-	out << rhs.mComment << "	";
-	out << rhs.mSize << "	";
+	out << rhs.mDestination << " ";
+	out << rhs.mStart << " " << rhs.mEnd <<" ";
+	out << rhs.mGrade << " ";
+	out << rhs.mComment << " ";
+	out << rhs.mSize << " ";
 	for (size_t i = 0; i < rhs.mSize; i++) {
-		out << rhs.mPhotos[i] << "	";
+		out << rhs.mPhotos[i] << " ";
 	}
 	out << std::endl;
 

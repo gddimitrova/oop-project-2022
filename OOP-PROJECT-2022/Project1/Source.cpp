@@ -8,7 +8,6 @@
 #define MAX_LEN 1024
 
 
-//TODO да си видя const char** photos-ите, да си дооправя добавянето на записки, да си направя логина
 void login() {
 
 }
@@ -241,9 +240,17 @@ int main() {
 
 	(strcmp(operation, "login") == 0) ? login() : signUp();*/
 
-	MyString str;
-	std::cin >> str;
-	std::cout << str;
+	//TODO за утре - разбери защо не бачка четенето от текстови, почни login()
+	
+	/*PersonalDB newPersonn;
+	newPersonn.readFromFile("Gerinak.db");
+	std::cout << newPersonn;*/
+
+	Date first;
+	std::ifstream inFile("GeriDim.db");
+	inFile >> first;
+	std::cout << first;
+
 
 	return 0;
 }
