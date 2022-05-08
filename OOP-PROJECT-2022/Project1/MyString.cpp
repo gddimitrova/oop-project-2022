@@ -70,9 +70,10 @@ std::istream& operator>>(std::istream& in, MyString& rhs)
 {
 	size_t len;
 	in >> len;
-	rhs.mString = new char[len + 1];
 	in.ignore();
-	in.getline(rhs.mString, len + 1);
+	rhs.mString = new char[len + 1];
+	in.get(rhs.mString, len + 1);
+	//rhs.mString[len + 1] = '\0';
 
 	return in;
 }

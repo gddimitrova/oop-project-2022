@@ -105,9 +105,11 @@ void addNewExperience(const char* userName) {
 		}
 	} while (exCaught);
 	
-	outFile<<newPerson;
+	outFile << newPerson;
+	
+	/*outFile<<newPerson;
 
-	outFile.close();
+	outFile.close();*/
 
 	delete[] destination;
 	delete[] comment;
@@ -231,25 +233,15 @@ int main() {
 		std::cerr << "Exception has been caught: " << ex.what() << std::endl;
 	}*/
 
-	/*std::cout << "Hello! Welcome to the travellers diary" << std::endl;
+	std::cout << "Hello! Welcome to the travellers diary" << std::endl;
 	std::cout << "Choose your next operation: login / register" << std::endl;
 
 	char operation[9];
 	std::cin >> operation;
 	std::cin.ignore();
 
-	(strcmp(operation, "login") == 0) ? login() : signUp();*/
+	(strcmp(operation, "login") == 0) ? login() : signUp();
 
-	//TODO за утре - разбери защо не бачка четенето от текстови, почни login()
-	
-	/*PersonalDB newPersonn;
-	newPersonn.readFromFile("Gerinak.db");
-	std::cout << newPersonn;*/
-
-	Date first;
-	std::ifstream inFile("GeriDim.db");
-	inFile >> first;
-	std::cout << first;
 
 
 	return 0;

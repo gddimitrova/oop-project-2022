@@ -1,4 +1,5 @@
 ﻿#include "PersonalDB.h"
+#include <iostream>
 #define DEFAULT_CAP 8
 #define MAX_LEN 2048
 
@@ -97,23 +98,51 @@ PersonalDB::~PersonalDB()
 	free();
 }
 
-//тоттално не е окей, TODO утре
 void PersonalDB::readFromFile(const char* filename)
 {
 	std::ifstream inFile(filename, std::ios::in);
-	inFile >> mDestination;
-	inFile >> mStart;
-	inFile >> mEnd;
-	inFile >> mGrade;
-	inFile >> mComment;
 
+	
+	inFile.ignore(13);
+	inFile >> mDestination;
+	inFile.ignore(14);
+	inFile >> mStart;
+	inFile.ignore(3);
+	inFile >> mEnd;
+	inFile.ignore(8);
+	inFile >> mGrade;
+	inFile.ignore(10);
+	inFile >> mComment;
+	
+	inFile.ignore(11);
 	size_t size;
 	inFile >> size;
+	
 	mSize = size;
+
+	inFile.ignore(9);
 	for (size_t i = 0; i < mSize; i++) {
 		inFile >> mPhotos[i];
+		inFile.ignore();
 	}
+	
+	
+}
 
+void PersonalDB::writeToFile(const char* filename)
+{
+	std::ofstream outFile(filename, std::ios::app);
+
+	outFile << mStart << " " << mEnd << " ";
+	outFile << mGrade << " ";
+	outFile << mSize << " ";
+	for (size_t i = 0; i < mSize; i++) {
+		outFile << mPhotos[i] << " ";
+	}
+	outFile << mComment << " ";
+	outFile << mDestination << " ";
+	
+	outFile << std::endl;
 }
 
 bool PersonalDB::validDates(const Date& start, const Date& end) const
@@ -182,17 +211,32 @@ void PersonalDB::setPhotos(char** photos, size_t size)
 	copyFrom(photos, size);
 }
 
+//TODO абстракция
 std::ostream& operator<<(std::ostream& out, const PersonalDB& rhs)
 {
-	out << rhs.mDestination << " ";
-	out << rhs.mStart << " " << rhs.mEnd <<" ";
-	out << rhs.mGrade << " ";
-	out << rhs.mComment << " ";
-	out << rhs.mSize << " ";
-	for (size_t i = 0; i < rhs.mSize; i++) {
-		out << rhs.mPhotos[i] << " ";
+	bool isCout = (&out == &std::cout);
+	if (isCout) {
+		out << "Destination: " << rhs.mDestination.getString() << std::endl;
+		out << "Time period: " << rhs.mStart << " - " << rhs.mEnd << std::endl;
+		out << "Grade: " << rhs.mGrade << std::endl;
+		out << "Comment: " << rhs.mComment.getString() << std::endl;
+		out << "There are " << rhs.mSize << " photos: ";
+		for (size_t i = 0; i < rhs.mSize; i++) {
+			out << rhs.mPhotos[i].getString() << " ";
+		}
+		out << std::endl;
 	}
-	out << std::endl;
+	else {
+		out << "Destination: " << rhs.mDestination<< std::endl;
+		out << "Time period: " << rhs.mStart << " - " << rhs.mEnd << std::endl;
+		out << "Grade: " << rhs.mGrade << std::endl;
+		out << "Comment: " << rhs.mComment<< std::endl;
+		out << "There are " << rhs.mSize << " photos: ";
+		for (size_t i = 0; i < rhs.mSize; i++) {
+			out << rhs.mPhotos[i]<< " ";
+		}
+		out << std::endl;
+	}
 
 	return out;
 }

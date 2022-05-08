@@ -30,6 +30,7 @@ public:
 	friend std::ostream& operator<<(std::ostream& out, const PersonalDB& rhs);
 	
 	void readFromFile(const char* filename);
+	void writeToFile(const char* filename);
 	
 	bool validDates(const Date& start, const Date& end) const;
 	bool validGrade(size_t grade) const { return grade >= 1 && grade <= 5; }
