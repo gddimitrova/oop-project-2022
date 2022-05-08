@@ -3,7 +3,7 @@
 
 DataBase::DataBase(const char* userName, const char* password, const char* email):mPassword(password), mEmail(email)
 {
-    if (!isValidName(userName))
+    if (userName != nullptr && !isValidName(userName))
         throw std::exception("Invalid username! Please use only digits and latin letters!");
     mUserName = userName;
 }
@@ -27,4 +27,13 @@ std::ostream& operator<<(std::ostream& out, const DataBase& rhs)
         << rhs.mEmail << std::endl;
 
     return out;
+}
+
+std::ifstream& operator>>(std::ifstream& in, DataBase& rhs)
+{
+    in >> rhs.mUserName;
+    in >> rhs.mPassword;
+    in >> rhs.mEmail;
+
+    return in;
 }

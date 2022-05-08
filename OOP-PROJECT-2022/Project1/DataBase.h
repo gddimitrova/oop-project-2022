@@ -12,11 +12,15 @@ private:
 
 
 public:
-	DataBase(const char* userName, const char* password, const char* email);
+	DataBase(const char* userName = nullptr, const char* password = nullptr, const char* email = nullptr);
 
 	bool isValidName(const char* userName) const;
 
 	friend std::ostream& operator<<(std::ostream& out, const DataBase& rhs);
+	friend std::ifstream& operator>>(std::ifstream& in, DataBase& rhs);
+
+	const MyString getUserName() const { return mUserName; }
+	const MyString getPassword() const { return mPassword; }
 };
 
 

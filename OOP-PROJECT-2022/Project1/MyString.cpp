@@ -7,7 +7,7 @@
 void MyString::copyDynamic(char*& destinaton, const char* source)
 {
 	if (source) {
-		int len = strlen(source) + 1;
+		size_t len = strlen(source) + 1;
 		destinaton = new char[len];
 		strcpy_s(destinaton, len, source);
 	}
@@ -73,7 +73,6 @@ std::istream& operator>>(std::istream& in, MyString& rhs)
 	in.ignore();
 	rhs.mString = new char[len + 1];
 	in.get(rhs.mString, len + 1);
-	//rhs.mString[len + 1] = '\0';
 
 	return in;
 }
