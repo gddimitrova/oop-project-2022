@@ -101,7 +101,6 @@ PersonalDB::~PersonalDB()
 void PersonalDB::readFromFile(std::ifstream& inFile)
 {
 	//std::ifstream inFile(filename, std::ios::in);
-	
 	inFile.ignore(13);
 	inFile >> mDestination;
 	inFile.ignore(14);
@@ -122,10 +121,10 @@ void PersonalDB::readFromFile(std::ifstream& inFile)
 	inFile.ignore(9);
 	for (size_t i = 0; i < mSize; i++) {
 		inFile >> mPhotos[i];
-		inFile.ignore();
+		if (i < mSize - 1) {
+			inFile.ignore();
+		}
 	}
-	
-	
 }
 //
 //void PersonalDB::writeToFile(const char* filename)
@@ -221,7 +220,10 @@ std::ostream& operator<<(std::ostream& out, const PersonalDB& rhs)
 		out << "Comment: " << rhs.mComment.getString() << std::endl;
 		out << "There are " << rhs.mSize << " photos: ";
 		for (size_t i = 0; i < rhs.mSize; i++) {
-			out << rhs.mPhotos[i].getString() << " ";
+			out << rhs.mPhotos[i].getString();
+			if (i < rhs.mSize - 1) {
+				out << " ";
+			}
 		}
 		out << std::endl;
 	}
@@ -232,7 +234,10 @@ std::ostream& operator<<(std::ostream& out, const PersonalDB& rhs)
 		out << "Comment: " << rhs.mComment<< std::endl;
 		out << "There are " << rhs.mSize << " photos: ";
 		for (size_t i = 0; i < rhs.mSize; i++) {
-			out << rhs.mPhotos[i]<< " ";
+			out << rhs.mPhotos[i];
+			if (i < rhs.mSize - 1) {
+				out << " ";
+			}
 		}
 		out << std::endl;
 	}

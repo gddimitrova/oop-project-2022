@@ -7,93 +7,6 @@
 
 #define MAX_LEN 1024
 
-void openPersonalDb(const char* filename) {
-	std::ifstream inFile(filename, std::ios::in);
-	if (!inFile.is_open()) {
-		throw std::exception("Couldn't open the file");
-	}
-
-	while (!inFile.eof()) {
-		PersonalDB newPerson;
-
-		newPerson.readFromFile(inFile);
-
-		std::cout << newPerson;
-
-		inFile.get();
-	}
-
-	inFile.close();
-}
-
-char* createFileName(const char* username) {
-	size_t newLen = strlen(".db") + strlen(username);
-	char* newName = new char[newLen + 1];
-	strcpy_s(newName, newLen + 1, username);
-	strcpy_s(newName + strlen(username), newLen + 1, ".db");
-
-	return newName;
-}
-
-//TODO добавяне на опция за преглед/добавяне на снимка и тн., оправяне на цялостната абстракция
-void login() {
-	char* username = new char[MAX_LEN], * password = new char[MAX_LEN];
-	std::cout << "To login please enter a valid username: ";
-	std::cin.getline(username, MAX_LEN);
-	std::cout << "Please enter a valid password: ";
-	std::cin.getline(password, MAX_LEN);
-
-	std::ifstream dataFile("DataBase.dat", std::ios::in);
-	if (!dataFile.is_open())
-		std::cerr << "There is no such user";
-
-	bool found = false;
-	size_t len = strlen(username);
-
-
-	while (!dataFile.eof()) {
-		size_t lenName;
-		char* name = new char[MAX_LEN];
-		dataFile >> lenName;
-		dataFile.ignore();
-		dataFile.get(name, lenName + 1);
-
-		if (strcmp(name, username) == 0) {
-			size_t lenPass;
-			char* pass = new char[MAX_LEN];
-			dataFile >> lenPass;
-			dataFile.ignore();
-			dataFile.get(pass, lenPass + 1);
-			if (strcmp(pass, password) == 0) {
-				found = true;
-				openPersonalDb(createFileName(username));
-				break;
-			}
-			else {
-				dataFile.ignore(MAX_LEN, '\n');
-			}
-		}
-		else {
-			dataFile.ignore(MAX_LEN, '\n');
-		}
-	}
-
-	dataFile.close();
-
-	if (!found) {
-		throw std::exception("There is no such user!");
-	}
-
-
-
-}
-
-void freeMemory(const char* arg1, const char* arg2, const char* arg3) {
-	delete[] arg1;
-	delete[] arg2;
-	delete[] arg3;
-}
-
 template <typename T>
 void dateValidation(const char* description, T& argument) {
 	bool caught;
@@ -142,7 +55,7 @@ void addNewExperience(const char* userName) {
 		}
 		catch (std::exception& ex)
 		{
-			std::cerr << ex.what()<<std::endl;
+			std::cerr << ex.what() << std::endl;
 			exCaught = true;
 		}
 	} while (true);
@@ -194,7 +107,7 @@ void addNewExperience(const char* userName) {
 			exCaught = true;
 		}
 	} while (exCaught);
-	
+
 	outFile << newPerson;
 
 	outFile.close();
@@ -206,6 +119,115 @@ void addNewExperience(const char* userName) {
 	}
 	delete[] photos;
 }
+
+void openPersonalDb(const char* filename) {
+	std::ifstream inFile(filename, std::ios::in);
+	if (!inFile.is_open()) {
+		throw std::exception("Couldn't open the file");
+	}
+
+	bool isDoneReading = false;
+	while (!isDoneReading) {
+		PersonalDB newPerson;
+
+		newPerson.readFromFile(inFile);
+
+		std::cout << newPerson;
+
+		inFile.ignore(2);
+		if (inFile.eof()) {
+			isDoneReading = true;
+		} else {
+			size_t currtel = inFile.tellg();
+			inFile.seekg(currtel - 2, std::ios::beg);
+		}
+	}
+
+	inFile.close();
+
+	//повторение на код с функцията signUp(), да се оправи
+	char answer[4];
+	std::cout << "Would you like to add your new experience: yes / no?" << std::endl;
+	std::cin >> answer;
+
+	if (strcmp(answer, "yes") == 0)
+		addNewExperience(filename);
+}
+
+char* createFileName(const char* username) {
+	size_t newLen = strlen(".db") + strlen(username);
+	char* newName = new char[newLen + 1];
+	strcpy_s(newName, newLen + 1, username);
+	strcpy_s(newName + strlen(username), newLen + 1, ".db");
+
+	return newName;
+}
+
+//TODO добавяне на опция за преглед/добавяне на снимка и тн., оправяне на цялостната абстракция
+void login() {
+	char* username = new char[MAX_LEN], * password = new char[MAX_LEN];
+	std::cout << "To login please enter a valid username: ";
+	std::cin.getline(username, MAX_LEN);
+	std::cout << "Please enter a valid password: ";
+	std::cin.getline(password, MAX_LEN);
+
+	MyString test;
+	std::cin >> test;
+
+	std::ifstream dataFile("DataBase.dat", std::ios::in);
+	if (!dataFile.is_open())
+		std::cerr << "There is no such user";
+
+	bool found = false;
+	size_t len = strlen(username);
+
+
+	while (!dataFile.eof()) {
+		size_t lenName;
+		char* name = new char[MAX_LEN];
+		dataFile >> lenName;
+		dataFile.ignore();
+		dataFile.get(name, lenName + 1);
+
+		if (strcmp(name, username) == 0) {
+			size_t lenPass;
+			char* pass = new char[MAX_LEN];
+			dataFile >> lenPass;
+			dataFile.ignore();
+			dataFile.get(pass, lenPass + 1);
+			if (strcmp(pass, password) == 0) {
+				found = true;
+				openPersonalDb(createFileName(username));
+				break;
+			}
+			else {
+				dataFile.ignore(MAX_LEN, '\n');
+			}
+		}
+		else {
+			dataFile.ignore(MAX_LEN, '\n');
+		}
+	}
+
+	dataFile.close();
+
+	if (!found) {
+		throw std::exception("There is no such user!");
+	}
+
+
+
+
+}
+
+void freeMemory(const char* arg1, const char* arg2, const char* arg3) {
+	delete[] arg1;
+	delete[] arg2;
+	delete[] arg3;
+}
+
+
+
 
 
 void signUp() {
@@ -245,8 +267,6 @@ void signUp() {
 
 		char* newName = createFileName(username);
 
-
-		//PersonalDB newPersonal;
 		char answer[4];
 		std::cout << "Would you like to add your new experience: yes / no?" << std::endl;
 		std::cin >> answer;
@@ -278,7 +298,7 @@ void getStarted() {
 		catch (std::exception& ex)
 		{
 			std::cerr << ex.what() << std::endl;
-			std::cout << "Would you like to continue - yes/no"<<std::endl;
+			std::cout << "Would you like to continue - yes/no" << std::endl;
 			char answer[4];
 			std::cin >> answer;
 			if (strcmp(answer, "yes") == 0) {

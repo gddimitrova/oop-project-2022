@@ -1,4 +1,4 @@
-#include "MyString.h"
+﻿#include "MyString.h"
 #include <iostream>
 
 #define DEFAULT_LENGHT 10
@@ -11,8 +11,9 @@ void MyString::copyDynamic(char*& destinaton, const char* source)
 		destinaton = new char[len];
 		strcpy_s(destinaton, len, source);
 	}
-	else
+	else {
 		destinaton = nullptr;
+	}
 }
 
 void MyString::free()
@@ -56,12 +57,12 @@ bool MyString::operator==(const MyString& other)
 
 bool MyString::operator!=(const MyString& other)
 {
-	return !(mString==other.mString);
+	return !(mString == other.mString);
 }
 
 std::ostream& operator<<(std::ostream& out, const MyString& rhs)
 {
-	out <<rhs.getLength()<<" "<< rhs.getString();
+	out << rhs.getLength() << " " << rhs.getString();
 
 	return out;
 }
@@ -70,9 +71,10 @@ std::istream& operator>>(std::istream& in, MyString& rhs)
 {
 	size_t len;
 	in >> len;
-	in.ignore();
+	in.ignore(); // Тук трябва да игнорираме, защото *
 	rhs.mString = new char[len + 1];
-	in.get(rhs.mString, len + 1);
+	in.get(rhs.mString, len + 1); // * тук четем с get а не със cin, защото може да имаме коментар изречение
+								 // и не ползваме getLine, защото се прецаква при случая със снимките
 
 	return in;
 }
