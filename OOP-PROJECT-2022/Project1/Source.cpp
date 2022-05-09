@@ -8,10 +8,22 @@
 #define MAX_LEN 1024
 
 void openPersonalDb(const char* filename) {
-	PersonalDB newPerson;
-	newPerson.readFromFile(filename);
+	std::ifstream inFile(filename, std::ios::in);
+	if (!inFile.is_open()) {
+		throw std::exception("Couldn't open the file");
+	}
 
-	std::cout << newPerson;
+	while (!inFile.eof()) {
+		PersonalDB newPerson;
+
+		newPerson.readFromFile(inFile);
+
+		std::cout << newPerson;
+
+		inFile.get();
+	}
+
+	inFile.close();
 }
 
 char* createFileName(const char* username) {
@@ -65,6 +77,15 @@ void login() {
 			dataFile.ignore(MAX_LEN, '\n');
 		}
 	}
+
+	dataFile.close();
+
+	if (!found) {
+		throw std::exception("There is no such user!");
+	}
+
+
+
 }
 
 void freeMemory(const char* arg1, const char* arg2, const char* arg3) {
@@ -242,6 +263,37 @@ void signUp() {
 	
 }
 
+void getStarted() {
+	
+	std::cout << "Choose your next operation: login / register" << std::endl;
+
+	char operation[9];
+	std::cin >> operation;
+	std::cin.ignore();
+
+	if (strcmp(operation, "login") == 0) {
+		try {
+			login();
+		}
+		catch (std::exception& ex)
+		{
+			std::cerr << ex.what() << std::endl;
+			std::cout << "Would you like to continue - yes/no"<<std::endl;
+			char answer[4];
+			std::cin >> answer;
+			if (strcmp(answer, "yes") == 0) {
+				getStarted();
+			}
+		}
+	}
+	else if (strcmp(operation, "register") == 0) {
+		signUp();
+	}
+	else {
+		throw std::exception("Invalid operation!");
+	}
+}
+
 int main() {
 
 	
@@ -297,7 +349,24 @@ int main() {
 	}*/
 
 	std::cout << "Hello! Welcome to the travellers diary" << std::endl;
-	std::cout << "Choose your next operation: login / register" << std::endl;
+	
+	//TODO do{}while() loop не работи след повторна грешка както и do while loop при функцията getStarted();
+	try {
+		getStarted();
+	}
+	catch (std::exception& ex)
+	{
+		std::cerr << ex.what();
+		std::cout << std::endl << "Would you like to continue - yes/no" << std::endl;
+		char answer[4];
+		std::cin >> answer;
+		if (strcmp(answer, "yes") == 0) {
+			getStarted();
+		}
+	}
+
+	
+	/*std::cout << "Choose your next operation: login / register" << std::endl;
 
 	char operation[9];
 	std::cin >> operation;
@@ -305,6 +374,19 @@ int main() {
 
 	(strcmp(operation, "login") == 0) ? login() : signUp();
 
+	if (strcmp(operation, "login") == 0) {
+		try {
+			login();
+		}
+		catch (std::exception& ex)
+		{
+			std::cerr << ex.what() << std::endl;
+			std::cout << "Would you like to continue - yes/no";
+			char answer[4];
+			std::cin >> answer;
+			(strcmp(answer, "yes")==0)? 
+		}
+	}*/
 
 
 

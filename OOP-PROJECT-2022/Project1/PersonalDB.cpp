@@ -98,10 +98,9 @@ PersonalDB::~PersonalDB()
 	free();
 }
 
-void PersonalDB::readFromFile(const char* filename)
+void PersonalDB::readFromFile(std::ifstream& inFile)
 {
-	std::ifstream inFile(filename, std::ios::in);
-
+	//std::ifstream inFile(filename, std::ios::in);
 	
 	inFile.ignore(13);
 	inFile >> mDestination;
@@ -128,22 +127,22 @@ void PersonalDB::readFromFile(const char* filename)
 	
 	
 }
-
-void PersonalDB::writeToFile(const char* filename)
-{
-	std::ofstream outFile(filename, std::ios::app);
-
-	outFile << mStart << " " << mEnd << " ";
-	outFile << mGrade << " ";
-	outFile << mSize << " ";
-	for (size_t i = 0; i < mSize; i++) {
-		outFile << mPhotos[i] << " ";
-	}
-	outFile << mComment << " ";
-	outFile << mDestination << " ";
-	
-	outFile << std::endl;
-}
+//
+//void PersonalDB::writeToFile(const char* filename)
+//{
+//	std::ofstream outFile(filename, std::ios::app);
+//
+//	outFile << mStart << " " << mEnd << " ";
+//	outFile << mGrade << " ";
+//	outFile << mSize << " ";
+//	for (size_t i = 0; i < mSize; i++) {
+//		outFile << mPhotos[i] << " ";
+//	}
+//	outFile << mComment << " ";
+//	outFile << mDestination << " ";
+//	
+//	outFile << std::endl;
+//}
 
 bool PersonalDB::validDates(const Date& start, const Date& end) const
 {
