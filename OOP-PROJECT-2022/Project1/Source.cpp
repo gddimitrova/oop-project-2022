@@ -7,6 +7,15 @@
 
 #define MAX_LEN 1024
 
+const char* readArgument(const char* description, int len) {
+	char* argument = new char[len];
+	std::cout << description;
+	std::cin.getline(argument, len);
+
+	return argument;
+}
+
+
 bool checkChar(std::ifstream& in, const char* destination) {
 	size_t len;
 	in >> len;
@@ -81,16 +90,19 @@ void dateValidation(const char* description, Date& argument) {
 
 void addNewExperience(const char* userName) {
 	std::ofstream outFile(userName, std::ios::app);
-	char* destination, * comment, ** photos;
+	//char* destination, * comment;
+	char** photos;
 	size_t grade, size;
 	Date start, end;
 	PersonalDB newPerson;
 
 	std::cin.ignore();
-	std::cout << "Please enter destination: ";
+	/*std::cout << "Please enter destination: ";
 	destination = new char[MAX_LEN];
-	std::cin.getline(destination, MAX_LEN);
+	std::cin.getline(destination, MAX_LEN);*/
+	const char* destination = readArgument("Please enter destination: ", MAX_LEN);
 	newPerson.setDestination(destination);
+
 
 
 	std::cout << "Please enter time period in the following format - YYYY-MM-DD!" << std::endl;
@@ -132,9 +144,10 @@ void addNewExperience(const char* userName) {
 	newPerson.setGrade(grade);
 
 	std::cin.ignore();
-	std::cout << "Please leave a comment about this destination: ";
+	/*std::cout << "Please leave a comment about this destination: ";
 	comment = new char[MAX_LEN * 2];
-	std::cin.getline(comment, MAX_LEN * 2);
+	std::cin.getline(comment, MAX_LEN * 2);*/
+	const char* comment = readArgument("Please leave a comment about this destination: ", MAX_LEN * 2);
 	newPerson.setComment(comment);
 
 	std::cout << "How many photos would you like to upload? : ";
@@ -270,11 +283,16 @@ char* createFileName(const char* username) {
 
 //TODO добавяне на опция за преглед/добавяне на снимка и тн., оправяне на цялостната абстракция
 void login() {
-	char* username = new char[MAX_LEN], * password = new char[MAX_LEN];
+	/*char* username = new char[MAX_LEN]; 
 	std::cout << "To login please enter a valid username: ";
-	std::cin.getline(username, MAX_LEN);
-	std::cout << "Please enter a valid password: ";
+	std::cin.getline(username, MAX_LEN);*/
+
+	const char* username = readArgument("To login please enter a valid username: ", MAX_LEN);
+
+	/*std::cout << "Please enter a valid password: ";
 	std::cin.getline(password, MAX_LEN);
+	char* password = new char[MAX_LEN];*/
+	const char* password = readArgument("Please enter a valid password: ", MAX_LEN);
 
 
 	std::ifstream dataFile("DataBase.dat", std::ios::in);
@@ -348,17 +366,23 @@ void freeMemory(const char* arg1, const char* arg2, const char* arg3) {
 
 void signUp() {
 
-	std::cout << "Please create your username: ";
+	/*std::cout << "Please create your username: ";
 	char* username = new char[MAX_LEN];
-	char* password = new char[MAX_LEN];
-	char* email = new char[MAX_LEN];
+	std::cin.getline(username, MAX_LEN);*/
+
+	const char* username = readArgument("Please create your username: ", MAX_LEN);
 
 
-	std::cin.getline(username, MAX_LEN);
+	/*char* password = new char[MAX_LEN];
 	std::cout << "Please create your password: ";
-	std::cin.getline(password, MAX_LEN);
+	std::cin.getline(password, MAX_LEN);*/
+	const char* password = readArgument("Please create your password: ", MAX_LEN);
+	
+	/*char* email = new char[MAX_LEN];
 	std::cout << "Please enter your email: ";
-	std::cin.getline(email, MAX_LEN);
+	std::cin.getline(email, MAX_LEN);*/
+
+	const char* email = readArgument("Please enter your email: ", MAX_LEN);
 
 	bool caught = false;
 	try {
