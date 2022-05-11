@@ -13,16 +13,17 @@ void addToDestinations(const char* destination, const char* user) {
 	bool found = false;
 	bool emptyFile = destFile.peek() == EOF;
 
-
 	while (!emptyFile && !destFile.eof()) {
 		size_t len;
 		destFile >> len;
 		destFile.ignore();
 		char* dest = new char[len + 1];
-		destFile.get(dest, len+1);
+		destFile.get(dest, len + 1);
 
-
-		if (strcmp(dest, destination) == 0) {
+		
+		if(strcmp(dest, destination) == 0)
+		{
+			size_t len;
 			destFile >> len;
 			destFile.ignore();
 			char* name = new char[len + 1];
@@ -37,15 +38,18 @@ void addToDestinations(const char* destination, const char* user) {
 		else {
 			destFile.ignore(MAX_LEN, '\n');
 		}
-		delete[] dest;
 	}
 	destFile.clear();
+
 	if (!found) {
 		destFile << strlen(destination) << " " << destination << " " << strlen(user) << " " << user << std::endl;
 	}
+
 	destFile.close();
 
 }
+
+
 
 template <typename T>
 void dateValidation(const char* description, T& argument) {
@@ -163,8 +167,8 @@ void addNewExperience(const char* userName) {
 	delete[] photos;
 }
 
-void openPersonalDb(const char* filename) {
-	std::ifstream inFile(filename, std::ios::in);
+void openPersonalDb(const char* user, const bool searchingDest=false, const char* destination=nullptr) {
+	std::ifstream inFile(user, std::ios::in);
 	if (!inFile.is_open()) {
 		throw std::exception("Couldn't open the file");
 	}
@@ -175,7 +179,16 @@ void openPersonalDb(const char* filename) {
 
 		newPerson.readFromFile(inFile);
 
-		std::cout << newPerson;
+		if (searchingDest) {
+			if (newPerson.getDestination() == destination) {
+				std::cout << "User: " << user << std::endl;
+				std::cout << newPerson;
+			}
+		}
+		else {
+			std::cout << newPerson;
+		}
+		
 
 		inFile.ignore(2);
 		if (inFile.eof()) {
@@ -189,12 +202,43 @@ void openPersonalDb(const char* filename) {
 	inFile.close();
 
 	//повторение на код с функцията signUp(), да се оправи
-	char answer[4];
+	/*char answer[4];
 	std::cout << "Would you like to add your new experience: yes / no?" << std::endl;
 	std::cin >> answer;
 
 	if (strcmp(answer, "yes") == 0)
-		addNewExperience(filename);
+		addNewExperience(user);*/
+}
+
+void printInfo(const char* destination) {
+	std::ifstream inDestFile("Destination.txt", std::ios::in);
+	bool found = false;
+
+	while (!inDestFile.eof()) {
+		size_t len;
+		inDestFile >> len;
+		inDestFile.ignore();
+		char* name = new char[MAX_LEN];
+		inDestFile.get(name, len + 1);
+
+		if (strcmp(name, destination) == 0) {
+			found = true;
+			inDestFile >> len;
+			inDestFile.ignore();
+			char* user = new char[MAX_LEN];
+			inDestFile.get(user, len + 1);
+
+			openPersonalDb(user, true, destination);
+		}
+		else
+		{
+			inDestFile.ignore(MAX_LEN, '\n');
+		}
+
+	}
+	if (!found) {
+		throw std::exception("There is yet no such destination!");
+	}
 }
 
 char* createFileName(const char* username) {
@@ -267,10 +311,6 @@ void freeMemory(const char* arg1, const char* arg2, const char* arg3) {
 	delete[] arg3;
 }
 
-
-
-
-
 void signUp() {
 
 	std::cout << "Please create your username: ";
@@ -317,6 +357,20 @@ void signUp() {
 		else {
 			std::ofstream perosnalOutFile(newName, std::ios::app);
 			perosnalOutFile.close();
+
+			std::cout << "Would you like to search for a destination: yes / no?" << std::endl;
+			std::cin >> answer;
+			if (strcmp(answer, "yes") == 0) {
+				std::cout << "Please enter a destination: ";
+				char destination[MAX_LEN];
+				std::cin >> destination;
+				try {
+					printInfo(destination);
+				}
+				catch (std::exception& ex) {
+					std::cerr << ex.what();
+				}
+			}
 		}
 			
 		freeMemory(username, password, email);
@@ -357,58 +411,6 @@ void getStarted() {
 
 int main() {
 
-	
-	//try {
-	//	
-	//	DataBase two("GERI&", "7372", "sjhaj@gmai.com");
-	//}
-	//catch (const std::exception& ex) {
-	//	std::cerr << "Exception has been caught: " << ex.what() << std::endl;
-	//}
-
-
-	//DataBase one("GERII", "1234", "ggdd@gmail.com");
-	//std::ofstream outFile("DataBase.db", std::ios::app);
-	//outFile << one;
-
-	//const char* photos[] = { "photoOne.png", "photoTwo.jpeg"};
-	//PersonalDB one("Burgas", 1, 12, 2001, 12, 12, 2001, 5, "lovely place", photos, 2);
-	//std::cout << one << std::endl;
-
-	//const char* photos1[] = { "newPhoto.png", "another.jpeg" };
-	//PersonalDB two = one;
-	//std::cout << two;
-
-	/*try {
-		Date one(2022, 5, 5);
-	}
-	catch (const std::exception& ex) {
-		std::cerr << "Exception has been caught: " << ex.what() << std::endl;
-	}*/
-
-	/*try {
-		Date two(2022, 2, 29);
-	}
-	catch (const std::exception& ex) {
-		std::cerr << "Exception has been caught: " << ex.what() << std::endl;
-	}*/
-
-	/*try {
-		PersonalDB one("Burgas", 28, 04, 2022, 28, 03, 2023, 1, "lovely place", photos, 2);
-	}
-	catch (const std::exception& ex) {
-		std::cerr << "Exception has been caught: " << ex.what() << std::endl;
-	}*/
-
-
-	/*const char* photos2[] = { "photoOne.png", "photoTwo.jpeeg" };
-	try {
-		PersonalDB one("Burgas", 28, 04, 2022, 28, 03, 2023, 1, "lovely place", photos2, 2);
-	}
-	catch (const std::exception& ex) {
-		std::cerr << "Exception has been caught: " << ex.what() << std::endl;
-	}*/
-
 	std::cout << "Hello! Welcome to the travellers diary" << std::endl;
 	
 	//TODO do{}while() loop не работи след повторна грешка както и do while loop при функцията getStarted();
@@ -426,28 +428,6 @@ int main() {
 		}
 	}
 
-	
-	/*std::cout << "Choose your next operation: login / register" << std::endl;
-
-	char operation[9];
-	std::cin >> operation;
-	std::cin.ignore();
-
-	(strcmp(operation, "login") == 0) ? login() : signUp();
-
-	if (strcmp(operation, "login") == 0) {
-		try {
-			login();
-		}
-		catch (std::exception& ex)
-		{
-			std::cerr << ex.what() << std::endl;
-			std::cout << "Would you like to continue - yes/no";
-			char answer[4];
-			std::cin >> answer;
-			(strcmp(answer, "yes")==0)? 
-		}
-	}*/
 
 
 

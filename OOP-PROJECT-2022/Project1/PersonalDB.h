@@ -42,6 +42,8 @@ public:
 	void setGrade(size_t grade);
 	void setPhotos(char** photos, size_t size);
 	void setComment(const char* comment) { mComment = comment; }
+
+	const MyString getDestination() const { return mDestination; }
 };
 
 #endif

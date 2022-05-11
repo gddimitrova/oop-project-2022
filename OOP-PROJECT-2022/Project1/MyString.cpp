@@ -50,12 +50,13 @@ MyString::~MyString()
 	free();
 }
 
-bool MyString::operator==(const MyString& other)
+bool MyString::operator==(const MyString& other) const
 {
 	return strcmp(mString, other.mString)==0;
 }
 
-bool MyString::operator!=(const MyString& other)
+
+bool MyString::operator!=(const MyString& other) const 
 {
 	return !(mString == other.mString);
 }

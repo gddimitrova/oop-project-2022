@@ -24,9 +24,8 @@ public:
 	//нещо не е окей, TODO за утре
 	friend std::istream& operator>>(std::istream& in, MyString& rhs);
 
-	bool operator==(const MyString& other);
-	bool operator!=(const MyString& other);
-
+	bool operator==(const MyString& other) const;
+	bool operator!=(const MyString& other) const;
 
 };
 
