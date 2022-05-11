@@ -7,6 +7,46 @@
 
 #define MAX_LEN 1024
 
+void addToDestinations(const char* destination, const char* user) {
+	std::fstream destFile;
+	destFile.open("Destination.txt", std::ios::in | std::ios::out | std::ios::app);
+	bool found = false;
+	bool emptyFile = destFile.peek() == EOF;
+
+
+	while (!emptyFile && !destFile.eof()) {
+		size_t len;
+		destFile >> len;
+		destFile.ignore();
+		char* dest = new char[len + 1];
+		destFile.get(dest, len+1);
+
+
+		if (strcmp(dest, destination) == 0) {
+			destFile >> len;
+			destFile.ignore();
+			char* name = new char[len + 1];
+			destFile.get(name, len + 1);
+
+			if (strcmp(name, user) == 0) {
+				found = true;
+				break;
+			}
+			delete[] name;
+		}
+		else {
+			destFile.ignore(MAX_LEN, '\n');
+		}
+		delete[] dest;
+	}
+	destFile.clear();
+	if (!found) {
+		destFile << strlen(destination) << " " << destination << " " << strlen(user) << " " << user << std::endl;
+	}
+	destFile.close();
+
+}
+
 template <typename T>
 void dateValidation(const char* description, T& argument) {
 	bool caught;
@@ -38,6 +78,7 @@ void addNewExperience(const char* userName) {
 	destination = new char[MAX_LEN];
 	std::cin.getline(destination, MAX_LEN);
 	newPerson.setDestination(destination);
+
 
 	std::cout << "Please enter time period in the following format - YYYY-MM-DD!" << std::endl;
 
@@ -110,6 +151,8 @@ void addNewExperience(const char* userName) {
 
 	outFile << newPerson;
 
+	addToDestinations(destination, userName);
+
 	outFile.close();
 
 	delete[] destination;
@@ -171,8 +214,6 @@ void login() {
 	std::cout << "Please enter a valid password: ";
 	std::cin.getline(password, MAX_LEN);
 
-	MyString test;
-	std::cin >> test;
 
 	std::ifstream dataFile("DataBase.dat", std::ios::in);
 	if (!dataFile.is_open())
