@@ -21,7 +21,6 @@ public:
 	const char* getString() const { return mString; }
 
 	friend std::ostream& operator<<(std::ostream& out, const MyString& rhs);
-	//нещо не е окей, TODO за утре
 	friend std::istream& operator>>(std::istream& in, MyString& rhs);
 
 	bool operator==(const MyString& other) const;

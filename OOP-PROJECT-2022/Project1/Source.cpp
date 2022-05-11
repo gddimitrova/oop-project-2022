@@ -7,6 +7,16 @@
 
 #define MAX_LEN 1024
 
+bool checkChar(std::ifstream& in, const char* destination) {
+	size_t len;
+	in >> len;
+	in.ignore();
+	char* name = new char[MAX_LEN];
+	in.get(name, len + 1);
+
+	return (strcmp(name, destination)==0);
+}
+
 void addToDestinations(const char* destination, const char* user) {
 	std::fstream destFile;
 	destFile.open("Destination.txt", std::ios::in | std::ios::out | std::ios::app);
@@ -38,6 +48,7 @@ void addToDestinations(const char* destination, const char* user) {
 		else {
 			destFile.ignore(MAX_LEN, '\n');
 		}
+		delete[] dest;
 	}
 	destFile.clear();
 
@@ -50,9 +61,7 @@ void addToDestinations(const char* destination, const char* user) {
 }
 
 
-
-template <typename T>
-void dateValidation(const char* description, T& argument) {
+void dateValidation(const char* description, Date& argument) {
 	bool caught;
 	do {
 		caught = false;
@@ -60,7 +69,7 @@ void dateValidation(const char* description, T& argument) {
 		std::cin >> argument;
 
 		try {
-			T newArgument = argument;
+			Date newArgument = argument;
 		}
 		catch (std::exception& ex) {
 			std::cerr << ex.what() << std::endl;
@@ -89,8 +98,8 @@ void addNewExperience(const char* userName) {
 	bool exCaught;
 	do {
 		exCaught = false;
-		dateValidation<Date>("Start: ", start);
-		dateValidation<Date>("End: ", end);
+		dateValidation("Start: ", start);
+		dateValidation("End: ", end);
 
 		try {
 			if (!newPerson.validDates(start, end))
@@ -215,14 +224,14 @@ void printInfo(const char* destination) {
 	bool found = false;
 
 	while (!inDestFile.eof()) {
-		size_t len;
+		/*size_t len;
 		inDestFile >> len;
 		inDestFile.ignore();
 		char* name = new char[MAX_LEN];
-		inDestFile.get(name, len + 1);
-
-		if (strcmp(name, destination) == 0) {
+		inDestFile.get(name, len + 1);*/
+		if (checkChar(inDestFile, destination)) {
 			found = true;
+			size_t len;
 			inDestFile >> len;
 			inDestFile.ignore();
 			char* user = new char[MAX_LEN];
@@ -230,6 +239,15 @@ void printInfo(const char* destination) {
 
 			openPersonalDb(user, true, destination);
 		}
+		/*if (strcmp(name, destination) == 0) {
+			found = true;
+			inDestFile >> len;
+			inDestFile.ignore();
+			char* user = new char[MAX_LEN];
+			inDestFile.get(user, len + 1);
+
+			openPersonalDb(user, true, destination);
+		}*/
 		else
 		{
 			inDestFile.ignore(MAX_LEN, '\n');
@@ -268,13 +286,34 @@ void login() {
 
 
 	while (!dataFile.eof()) {
-		size_t lenName;
+		/*size_t lenName;
 		char* name = new char[MAX_LEN];
 		dataFile >> lenName;
 		dataFile.ignore();
-		dataFile.get(name, lenName + 1);
+		dataFile.get(name, lenName + 1);*/
 
-		if (strcmp(name, username) == 0) {
+		if (checkChar(dataFile, username)) {
+			/*size_t lenPass;
+			char* pass = new char[MAX_LEN];
+			dataFile >> lenPass;
+			dataFile.ignore();
+			dataFile.get(pass, lenPass + 1);*/
+			if (checkChar(dataFile, password)) {
+				found = true;
+				openPersonalDb(createFileName(username));
+				break;
+			}
+			/*if (strcmp(pass, password) == 0) {
+				found = true;
+				openPersonalDb(createFileName(username));
+				break;
+			}*/
+			else {
+				dataFile.ignore(MAX_LEN, '\n');
+			}
+		}
+
+		/*if (strcmp(name, username) == 0) {
 			size_t lenPass;
 			char* pass = new char[MAX_LEN];
 			dataFile >> lenPass;
@@ -288,7 +327,7 @@ void login() {
 			else {
 				dataFile.ignore(MAX_LEN, '\n');
 			}
-		}
+		}*/
 		else {
 			dataFile.ignore(MAX_LEN, '\n');
 		}
@@ -299,10 +338,6 @@ void login() {
 	if (!found) {
 		throw std::exception("There is no such user!");
 	}
-
-
-
-
 }
 
 void freeMemory(const char* arg1, const char* arg2, const char* arg3) {

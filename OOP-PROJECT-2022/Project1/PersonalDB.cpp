@@ -194,38 +194,25 @@ void PersonalDB::setPhotos(char** photos, size_t size)
 	copyFrom(photos, size);
 }
 
-//TODO абстракция
 std::ostream& operator<<(std::ostream& out, const PersonalDB& rhs)
 {
 	bool isCout = (&out == &std::cout);
-	if (isCout) {
-		out << "Destination: " << rhs.mDestination.getString() << std::endl;
-		out << "Time period: " << rhs.mStart << " - " << rhs.mEnd << std::endl;
-		out << "Grade: " << rhs.mGrade << std::endl;
-		out << "Comment: " << rhs.mComment.getString() << std::endl;
-		out << "There are " << rhs.mSize << " photos: ";
-		for (size_t i = 0; i < rhs.mSize; i++) {
-			out << rhs.mPhotos[i].getString();
-			if (i < rhs.mSize - 1) {
-				out << " ";
-			}
+	out << "Destination: ";
+	(isCout) ? out << rhs.mDestination.getString() : out << rhs.mDestination;
+	out << std::endl;
+	out << "Time period: " << rhs.mStart << " - " << rhs.mEnd << std::endl;
+	out << "Grade: " << rhs.mGrade << std::endl;
+	out << "Comment: ";
+	(isCout) ? out << rhs.mComment.getString() : out << rhs.mComment;
+	out << std::endl;
+	out << "There are " << rhs.mSize << " photos: ";
+	for (size_t i = 0; i < rhs.mSize; i++) {
+		(isCout) ? out << rhs.mPhotos[i].getString() : out << rhs.mPhotos[i];
+		if (i < rhs.mSize - 1) {
+			out << " ";
 		}
-		out << std::endl;
 	}
-	else {
-		out << "Destination: " << rhs.mDestination<< std::endl;
-		out << "Time period: " << rhs.mStart << " - " << rhs.mEnd << std::endl;
-		out << "Grade: " << rhs.mGrade << std::endl;
-		out << "Comment: " << rhs.mComment<< std::endl;
-		out << "There are " << rhs.mSize << " photos: ";
-		for (size_t i = 0; i < rhs.mSize; i++) {
-			out << rhs.mPhotos[i];
-			if (i < rhs.mSize - 1) {
-				out << " ";
-			}
-		}
-		out << std::endl;
-	}
+	out << std::endl;
 
 	return out;
 }
