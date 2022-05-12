@@ -1,7 +1,7 @@
 #include "Date.h"
 #include <iomanip>
 
-Date::Date():mYear(0001), mMonth(1), mDay(1)
+Date::Date():mYear(1), mMonth(1), mDay(1)
 {
 }
 
@@ -53,7 +53,6 @@ std::istream& operator>>(std::istream& in, Date& rhs)
 {
     int day, month, year;
     char ch;
-    //in.ignore();
     in >> year >> ch >> month >> ch >> day;
     rhs.setDay(day);
     rhs.setMonth(month);

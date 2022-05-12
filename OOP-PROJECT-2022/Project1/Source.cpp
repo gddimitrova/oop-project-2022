@@ -7,10 +7,10 @@
 
 #define MAX_LEN 1024
 
-const char* readArgument(const char* description, int len) {
+char* readArgument(const char* description, size_t len) {
 	char* argument = new char[len];
 	std::cout << description;
-	std::cin.getline(argument, len);
+	//std::cin.getline(argument, len);
 
 	return argument;
 }
@@ -90,17 +90,17 @@ void dateValidation(const char* description, Date& argument) {
 
 void addNewExperience(const char* userName) {
 	std::ofstream outFile(userName, std::ios::app);
-	//char* destination, * comment;
+	char* destination, * comment;
 	char** photos;
 	size_t grade, size;
 	Date start, end;
 	PersonalDB newPerson;
 
 	std::cin.ignore();
-	/*std::cout << "Please enter destination: ";
+	std::cout << "Please enter destination: ";
 	destination = new char[MAX_LEN];
-	std::cin.getline(destination, MAX_LEN);*/
-	const char* destination = readArgument("Please enter destination: ", MAX_LEN);
+	std::cin.getline(destination, MAX_LEN);
+	//char* destination = readArgument("Please enter destination: ", MAX_LEN);
 	newPerson.setDestination(destination);
 
 
@@ -144,10 +144,10 @@ void addNewExperience(const char* userName) {
 	newPerson.setGrade(grade);
 
 	std::cin.ignore();
-	/*std::cout << "Please leave a comment about this destination: ";
+	std::cout << "Please leave a comment about this destination: ";
 	comment = new char[MAX_LEN * 2];
-	std::cin.getline(comment, MAX_LEN * 2);*/
-	const char* comment = readArgument("Please leave a comment about this destination: ", MAX_LEN * 2);
+	std::cin.getline(comment, MAX_LEN * 2);
+	//char* comment = readArgument("Please leave a comment about this destination: ", MAX_LEN * 2);
 	newPerson.setComment(comment);
 
 	std::cout << "How many photos would you like to upload? : ";
@@ -188,40 +188,92 @@ void addNewExperience(const char* userName) {
 	}
 	delete[] photos;
 }
+char* createFileName(const char* username) {
+	size_t newLen = strlen(".db") + strlen(username);
+	char* newName = new char[newLen + 1];
+	strcpy_s(newName, newLen + 1, username);
+	strcpy_s(newName + strlen(username), newLen + 1, ".db");
 
+	return newName;
+}
+
+void askForAddingDest(const char* newName) {
+	
+	char* answer = new char[4];
+	std::cout << "Would you like to add new destination: yes / no?" << std::endl;
+	std::cin >> answer;
+	//char* answer = askQuestion("Would you like to add your new experience: yes / no?");
+	if (strcmp(answer, "yes") == 0)
+		addNewExperience(newName);
+	else {
+		std::ofstream perosnalOutFile(newName, std::ios::app);
+		perosnalOutFile.close();
+	}
+	delete[] answer;
+}
+
+void printInfo(const char* destination);
+void searchForDestination() {
+	char* answer = new char[4];
+	std::cout << "Would you like to search for a destination: yes / no?" << std::endl;
+	std::cin >> answer;
+	//answer = askQuestion("Would you like to search for a destination: yes / no?");
+	if (strcmp(answer, "yes") == 0) {
+		std::cout << "Please enter a destination: ";
+		/*char destination[MAX_LEN];
+		std::cin >>destination;*/
+		// 
+		std::cin.ignore();
+		char* destination = new char[MAX_LEN];
+		std::cin.getline(destination, MAX_LEN);
+		//char* destination = readArgument("Please enter a destination: ", MAX_LEN);
+		try {
+			printInfo(destination);
+		}
+		catch (std::exception& ex) {
+			std::cerr << ex.what() << std::endl;
+		}
+	}
+	delete[] answer;
+}
 void openPersonalDb(const char* user, const bool searchingDest=false, const char* destination=nullptr) {
 	std::ifstream inFile(user, std::ios::in);
 	if (!inFile.is_open()) {
-		throw std::exception("Couldn't open the file");
+		std::cerr << "There are no registered destinations yet!" << std::endl;
 	}
+	else {
+		bool emptyFile = inFile.peek() == EOF;
+		bool isDoneReading = false;
+		while (!inFile.eof() && !emptyFile) {
+			PersonalDB newPerson;
 
-	bool isDoneReading = false;
-	while (!isDoneReading) {
-		PersonalDB newPerson;
+			newPerson.readFromFile(inFile);
 
-		newPerson.readFromFile(inFile);
-
-		if (searchingDest) {
-			if (newPerson.getDestination() == destination) {
-				std::cout << "User: " << user << std::endl;
+			if (searchingDest) {
+				if (newPerson.getDestination() == destination) {
+					std::cout << "User: " << user << std::endl;
+					std::cout << newPerson;
+				}
+			}
+			else {
 				std::cout << newPerson;
 			}
-		}
-		else {
-			std::cout << newPerson;
-		}
-		
 
-		inFile.ignore(2);
-		if (inFile.eof()) {
-			isDoneReading = true;
-		} else {
-			size_t currtel = inFile.tellg();
-			inFile.seekg(currtel - 2, std::ios::beg);
+
+			inFile.ignore(2);
+			if (inFile.eof()) {
+				isDoneReading = true;
+			}
+			else {
+				size_t currtel = inFile.tellg();
+				inFile.seekg(currtel - 2, std::ios::beg);
+			}
 		}
 	}
-
 	inFile.close();
+
+	//askForAddingDest(user);
+	//searchForDestination();
 
 	//повторение на код с функцията signUp(), да се оправи
 	/*char answer[4];
@@ -235,16 +287,26 @@ void openPersonalDb(const char* user, const bool searchingDest=false, const char
 void printInfo(const char* destination) {
 	std::ifstream inDestFile("Destination.txt", std::ios::in);
 	bool found = false;
+	bool emptyFile = inDestFile.peek() == EOF;
 
-	while (!inDestFile.eof()) {
-		/*size_t len;
+	while (!inDestFile.eof() && !emptyFile) {
+		size_t len;
 		inDestFile >> len;
 		inDestFile.ignore();
 		char* name = new char[MAX_LEN];
-		inDestFile.get(name, len + 1);*/
-		if (checkChar(inDestFile, destination)) {
+		inDestFile.get(name, len + 1);
+		//if (checkChar(inDestFile, destination)) {
+		//	found = true;
+		//	size_t len;
+		//	inDestFile >> len;
+		//	inDestFile.ignore();
+		//	char* user = new char[MAX_LEN];
+		//	inDestFile.get(user, len + 1);
+
+		//	openPersonalDb(user, true, destination);
+		//}
+		if (strcmp(name, destination) == 0) {
 			found = true;
-			size_t len;
 			inDestFile >> len;
 			inDestFile.ignore();
 			char* user = new char[MAX_LEN];
@@ -252,15 +314,6 @@ void printInfo(const char* destination) {
 
 			openPersonalDb(user, true, destination);
 		}
-		/*if (strcmp(name, destination) == 0) {
-			found = true;
-			inDestFile >> len;
-			inDestFile.ignore();
-			char* user = new char[MAX_LEN];
-			inDestFile.get(user, len + 1);
-
-			openPersonalDb(user, true, destination);
-		}*/
 		else
 		{
 			inDestFile.ignore(MAX_LEN, '\n');
@@ -268,36 +321,39 @@ void printInfo(const char* destination) {
 
 	}
 	if (!found) {
-		throw std::exception("There is yet no such destination!");
+		throw std::exception("There is no such destination yet!");
 	}
 }
 
-char* createFileName(const char* username) {
-	size_t newLen = strlen(".db") + strlen(username);
-	char* newName = new char[newLen + 1];
-	strcpy_s(newName, newLen + 1, username);
-	strcpy_s(newName + strlen(username), newLen + 1, ".db");
 
-	return newName;
-}
+
+//char* askQuestion(const char* question) {
+//	char answer[4];
+//	std::cout << question << std::endl;
+//	std::cin >> answer;
+//
+//	return answer;
+//}
+
+
 
 //TODO добавяне на опция за преглед/добавяне на снимка и тн., оправяне на цялостната абстракция
 void login() {
-	/*char* username = new char[MAX_LEN]; 
+	char* username = new char[MAX_LEN];
 	std::cout << "To login please enter a valid username: ";
-	std::cin.getline(username, MAX_LEN);*/
+	std::cin.getline(username, MAX_LEN);
 
-	const char* username = readArgument("To login please enter a valid username: ", MAX_LEN);
+	//char* username = readArgument("To login please enter a valid username: ", MAX_LEN);
 
-	/*std::cout << "Please enter a valid password: ";
+	char* password = new char[MAX_LEN];
+	std::cout << "Please enter a valid password: ";
 	std::cin.getline(password, MAX_LEN);
-	char* password = new char[MAX_LEN];*/
-	const char* password = readArgument("Please enter a valid password: ", MAX_LEN);
+	//char* password = readArgument("Please enter a valid password: ", MAX_LEN);
 
 
 	std::ifstream dataFile("DataBase.dat", std::ios::in);
-	if (!dataFile.is_open())
-		std::cerr << "There is no such user";
+	//if (!dataFile.is_open())
+	//	throw std::exception("There is no such user");
 
 	bool found = false;
 	size_t len = strlen(username);
@@ -318,7 +374,15 @@ void login() {
 			dataFile.get(pass, lenPass + 1);*/
 			if (checkChar(dataFile, password)) {
 				found = true;
+				//try {
 				openPersonalDb(createFileName(username));
+				//}
+				//catch (std::exception& ex) {
+				//	std::cerr << ex.what() << std::endl;
+				//	askForAddingDest(createFileName(username));
+				//	searchForDestination();
+				////}
+				
 				break;
 			}
 			/*if (strcmp(pass, password) == 0) {
@@ -353,9 +417,19 @@ void login() {
 
 	dataFile.close();
 
+	char* newName = createFileName(username);
 	if (!found) {
 		throw std::exception("There is no such user!");
 	}
+	char answer[4];
+	do {
+		askForAddingDest(newName);
+		searchForDestination();
+	
+		std::cout << "Would you like to continue: yes / no?"<<std::endl;
+		std::cin >> answer;
+	} while (strcmp(answer, "yes")==0);
+
 }
 
 void freeMemory(const char* arg1, const char* arg2, const char* arg3) {
@@ -364,25 +438,27 @@ void freeMemory(const char* arg1, const char* arg2, const char* arg3) {
 	delete[] arg3;
 }
 
+void getStarted();
+
 void signUp() {
 
-	/*std::cout << "Please create your username: ";
+	std::cout << "Please create your username: ";
 	char* username = new char[MAX_LEN];
-	std::cin.getline(username, MAX_LEN);*/
+	std::cin.getline(username, MAX_LEN);
 
-	const char* username = readArgument("Please create your username: ", MAX_LEN);
+	//char* username = readArgument("Please create your username: ", MAX_LEN);
 
 
-	/*char* password = new char[MAX_LEN];
+	char* password = new char[MAX_LEN];
 	std::cout << "Please create your password: ";
-	std::cin.getline(password, MAX_LEN);*/
-	const char* password = readArgument("Please create your password: ", MAX_LEN);
+	std::cin.getline(password, MAX_LEN);
+	//char* password = readArgument("Please create your password: ", MAX_LEN);
 	
-	/*char* email = new char[MAX_LEN];
+	char* email = new char[MAX_LEN];
 	std::cout << "Please enter your email: ";
-	std::cin.getline(email, MAX_LEN);*/
+	std::cin.getline(email, MAX_LEN);
 
-	const char* email = readArgument("Please enter your email: ", MAX_LEN);
+	//char* email = readArgument("Please enter your email: ", MAX_LEN);
 
 	bool caught = false;
 	try {
@@ -403,36 +479,10 @@ void signUp() {
 		std::ofstream outFile("DataBase.dat", std::ios::app);
 		outFile << newOneDB;
 		outFile.close();
-
-
-		char* newName = createFileName(username);
-
-		char answer[4];
-		std::cout << "Would you like to add your new experience: yes / no?" << std::endl;
-		std::cin >> answer;
-		
-		if (strcmp(answer, "yes") == 0)
-			addNewExperience(newName);
-		else {
-			std::ofstream perosnalOutFile(newName, std::ios::app);
-			perosnalOutFile.close();
-
-			std::cout << "Would you like to search for a destination: yes / no?" << std::endl;
-			std::cin >> answer;
-			if (strcmp(answer, "yes") == 0) {
-				std::cout << "Please enter a destination: ";
-				char destination[MAX_LEN];
-				std::cin >> destination;
-				try {
-					printInfo(destination);
-				}
-				catch (std::exception& ex) {
-					std::cerr << ex.what();
-				}
-			}
-		}
 			
 		freeMemory(username, password, email);
+
+		getStarted();
 	}
 	
 }
@@ -452,9 +502,10 @@ void getStarted() {
 		catch (std::exception& ex)
 		{
 			std::cerr << ex.what() << std::endl;
-			std::cout << "Would you like to continue - yes/no" << std::endl;
+			std::cout << "Would you like to continue - yes / no?" << std::endl;
 			char answer[4];
 			std::cin >> answer;
+			//const char* answer = askQuestion("Would you like to continue - yes/no");
 			if (strcmp(answer, "yes") == 0) {
 				getStarted();
 			}
@@ -473,19 +524,27 @@ int main() {
 	std::cout << "Hello! Welcome to the travellers diary" << std::endl;
 	
 	//TODO do{}while() loop не работи след повторна грешка както и do while loop при функцията getStarted();
-	try {
-		getStarted();
-	}
-	catch (std::exception& ex)
-	{
-		std::cerr << ex.what();
-		std::cout << std::endl << "Would you like to continue - yes/no" << std::endl;
-		char answer[4];
-		std::cin >> answer;
-		if (strcmp(answer, "yes") == 0) {
+	bool caught = false;
+	do {
+		try {
 			getStarted();
 		}
-	}
+		catch (std::exception& ex)
+		{
+			std::cerr << ex.what();
+			std::cout << std::endl << "Would you like to continue - yes/no" << std::endl;
+			char answer[4];
+			std::cin >> answer;
+			//const char* answer = askQuestion("Would you like to continue - yes / no?");
+			if (strcmp(answer, "yes") == 0) {
+				caught = true;
+			}
+			else {
+				break;
+			}
+		}
+	} while (caught);
+	
 
 
 
