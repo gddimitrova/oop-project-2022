@@ -130,12 +130,34 @@ void PersonalDB::readFromFile(std::ifstream& inFile)
 
 bool PersonalDB::validDates(const Date& start, const Date& end) const
 {
-	return (start.getYear() <= end.getYear()) &&
-			((start.getDay() <= end.getDay() && start.getMonth() <= end.getMonth()) ||
-			(start.getDay() > end.getDay() && start.getMonth() < end.getMonth()) ||
-			(start.getDay() <= end.getDay() && start.getMonth() > end.getMonth() && start.getYear() < end.getYear()) ||
-			(start.getDay() > end.getDay() && start.getMonth() > end.getMonth() && start.getYear() < end.getYear()));
+	if (start.getYear()> end.getYear()) {
+		return false;
+	}
+	if (start.getYear() < end.getYear()) {
+		return true;
+	}
 
+	if (start.getMonth() > end.getMonth()) {
+		return false;
+	}
+	if (start.getMonth() < end.getMonth()) {
+		return true;
+	}
+
+	if (start.getDay() > end.getDay()) {
+		return false;
+	}
+	if (start.getDay() < end.getDay()) {
+		return true;
+	}
+
+	return true;
+
+	/*return (start.getYear() <= end.getYear()) &&
+		((start.getDay() <= end.getDay()) && (start.getMonth() <= end.getMonth())) ||
+		((start.getDay() > end.getDay()) && (start.getMonth() < end.getMonth())) ||
+		((start.getDay() <= end.getDay()) && (start.getMonth() > end.getMonth()) && (start.getYear() < end.getYear())) ||
+		((start.getDay() > end.getDay()) && (start.getMonth() > end.getMonth()) && (start.getYear() < end.getYear()));*/
 }
 
 bool validExtension(const char* photo) {

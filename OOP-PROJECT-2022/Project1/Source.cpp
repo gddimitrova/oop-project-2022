@@ -8,7 +8,7 @@
 #define MAX_LEN 1024
 
 bool askQuestion(const char* question) {
-	char answer[4];
+	char answer[MAX_LEN];
 	std::cout << question << std::endl;
 	std::cin >> answer;
 
@@ -213,10 +213,8 @@ void searchForDestination() {
 	if(askQuestion("Would you like to search for a destination: yes / no?")){
 		std::cin.ignore();
 		char* destination = readArgument("Please enter a destination: ");
-		//std::cout<<"--------------------------------";
 		try {
 			printInfo(destination);
-			//std::cout << "--------------------------------" << std::endl;
 		}
 		catch (std::exception& ex) {
 			std::cerr << ex.what() << std::endl;
@@ -241,11 +239,13 @@ void openPersonalDb(const char* user, const bool searchingDest=false, const char
 					std::cout << "--------------------------------" << std::endl;
 					std::cout << "User: " << user << std::endl;
 					std::cout << newPerson;
+					std::cout << "--------------------------------" << std::endl;
 				}
 			}
 			else {
 				std::cout << "--------------------------------" << std::endl;
 				std::cout << newPerson;
+				std::cout << "--------------------------------" << std::endl;
 			}
 
 
@@ -257,7 +257,6 @@ void openPersonalDb(const char* user, const bool searchingDest=false, const char
 				size_t currtel = inFile.tellg();
 				inFile.seekg(currtel - 2, std::ios::beg);
 			}
-			std::cout << "--------------------------------" << std::endl;
 		}
 	}
 	inFile.close();
