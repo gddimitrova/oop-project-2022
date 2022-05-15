@@ -1,4 +1,5 @@
 ﻿#include <iostream>
+#include <iomanip>
 #include "MyString.h"
 #include "Date.h"
 #include "DataBase.h"
@@ -307,7 +308,7 @@ void printInfo(const char* destination) {
 		throw std::exception("There is no such destination yet!");
 	}
 	else {
-		std::cout << "Average grade from the users for this destination is: " << sum / count << std::endl;
+		std::cout << "Average grade from the users for this destination is: " <<std::setprecision(2) <<sum / count << std::endl;
 	}
 }
 
@@ -378,9 +379,9 @@ void signUp() {
 		signUp();
 	}
 	else {
-		DataBase newOneDB(username, password, email);
-		
 		std::ofstream outFile("DataBase.dat", std::ios::app);
+
+		DataBase newOneDB(username, password, email);
 		outFile << newOneDB;
 		outFile.close();
 			
