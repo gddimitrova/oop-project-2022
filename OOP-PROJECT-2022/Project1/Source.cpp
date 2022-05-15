@@ -224,7 +224,9 @@ void searchForDestination() {
 		}
 	}
 }
-void openPersonalDb(const char* user, const bool searchingDest=false, const char* destination=nullptr) {
+
+template <typename T>
+T openPersonalDb(const char* user,const bool searchingDest=false, const char* destination=nullptr) {
 	char* newName = createFileName(user);
 	std::ifstream inFile(newName, std::ios::in);
 	if (!inFile.is_open()) {
@@ -232,7 +234,8 @@ void openPersonalDb(const char* user, const bool searchingDest=false, const char
 	}
 	else {
 		bool emptyFile = inFile.peek() == EOF;
-		bool isDoneReading = false;
+		double countGrades = 0;
+		double sumGrades = 0;
 		while (!inFile.eof() && !emptyFile) {
 			PersonalDB newPerson;
 
@@ -244,6 +247,8 @@ void openPersonalDb(const char* user, const bool searchingDest=false, const char
 					std::cout << "User: " << user << std::endl;
 					std::cout << newPerson;
 					std::cout << "--------------------------------" << std::endl;
+					countGrades++;
+					sumGrades += newPerson.getGrade();
 				}
 			}
 			else {
@@ -252,24 +257,26 @@ void openPersonalDb(const char* user, const bool searchingDest=false, const char
 				std::cout << "--------------------------------" << std::endl;
 			}
 
-
 			inFile.ignore(2);
-			if (inFile.eof()) {
-				isDoneReading = true;
-			}
-			else {
+			if (!inFile.eof()) {
 				size_t currtel = inFile.tellg();
 				inFile.seekg(currtel - 2, std::ios::beg);
 			}
+
+		}
+		inFile.close();
+		if (searchingDest) {
+			return sumGrades / countGrades;
 		}
 	}
-	inFile.close();
+	
 }
 
 void printInfo(const char* destination) {
 	std::ifstream inDestFile("Destination.txt", std::ios::in);
 	bool found = false;
 	bool emptyFile = inDestFile.peek() == EOF;
+	double count = 0, sum = 0;
 
 	while (!inDestFile.eof() && !emptyFile) {
 		if (checkChar(inDestFile, destination)) {
@@ -281,7 +288,8 @@ void printInfo(const char* destination) {
 			inDestFile.get(user, len +1);
 		//	inDestFile.ignore(2);
 
-			openPersonalDb(user, true, destination);
+			sum += openPersonalDb<double>(user, true, destination);
+			count++;
 		}
 		else
 		{
@@ -291,6 +299,9 @@ void printInfo(const char* destination) {
 	}
 	if (!found) {
 		throw std::exception("There is no such destination yet!");
+	}
+	else {
+		std::cout << "Average grade from the users for this destination is: " << sum / count << std::endl;
 	}
 }
 
@@ -310,7 +321,7 @@ void login() {
 		if (checkChar(dataFile, username)) {
 			if (checkChar(dataFile, password)) {
 				found = true;
-				openPersonalDb(username);
+				openPersonalDb<bool>(username);
 				break;
 			}
 			else {
@@ -359,6 +370,7 @@ void signUp() {
 		freeMemory(username, password, email);
 		std::cerr <<ex.what() << std::endl;
 	}
+
 
 	if (caught) {
 		signUp();

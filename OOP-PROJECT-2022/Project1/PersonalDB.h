@@ -43,6 +43,7 @@ public:
 	void setComment(const char* comment) { mComment = comment; }
 
 	const MyString getDestination() const { return mDestination; }
+	size_t getGrade() const { return mGrade; }
 };
 
 #endif

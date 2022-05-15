@@ -1,2 +1,4 @@
 ﻿  Source.cpp
+D:\OOP\oop-project-2022\OOP-PROJECT-2022\Project1\Source.cpp(273): warning C4715: 'openPersonalDb<double>': not all control paths return a value
+D:\OOP\oop-project-2022\OOP-PROJECT-2022\Project1\Source.cpp(273): warning C4715: 'openPersonalDb<bool>': not all control paths return a value
   Project1.vcxproj -> D:\OOP\oop-project-2022\OOP-PROJECT-2022\x64\Debug\Project1.exe
