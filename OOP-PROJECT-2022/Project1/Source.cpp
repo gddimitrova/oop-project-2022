@@ -7,6 +7,15 @@
 
 #define MAX_LEN 1024
 
+char* createFileName(const char* username) {
+	size_t newLen = strlen(".db") + strlen(username);
+	char* newName = new char[newLen + 1];
+	strcpy_s(newName, newLen + 1, username);
+	strcpy_s(newName + strlen(username), newLen + 1, ".db");
+
+	return newName;
+}
+
 bool askQuestion(const char* question) {
 	char answer[MAX_LEN];
 	std::cout << question << std::endl;
@@ -97,7 +106,8 @@ void dateValidation(const char* description, Date& argument) {
 
 
 void addNewExperience(const char* userName) {
-	std::ofstream outFile(userName, std::ios::app);
+	char* newName = createFileName(userName);
+	std::ofstream outFile(newName, std::ios::app);
 	char* destination;
 	char** photos;
 	size_t grade, size;
@@ -188,14 +198,7 @@ void addNewExperience(const char* userName) {
 	}
 	delete[] photos;
 }
-char* createFileName(const char* username) {
-	size_t newLen = strlen(".db") + strlen(username);
-	char* newName = new char[newLen + 1];
-	strcpy_s(newName, newLen + 1, username);
-	strcpy_s(newName + strlen(username), newLen + 1, ".db");
 
-	return newName;
-}
 
 void askForAddingDest(const char* newName) {
 
@@ -222,7 +225,8 @@ void searchForDestination() {
 	}
 }
 void openPersonalDb(const char* user, const bool searchingDest=false, const char* destination=nullptr) {
-	std::ifstream inFile(user, std::ios::in);
+	char* newName = createFileName(user);
+	std::ifstream inFile(newName, std::ios::in);
 	if (!inFile.is_open()) {
 		std::cerr << "There are no registered destinations yet!" << std::endl;
 	}
@@ -274,7 +278,8 @@ void printInfo(const char* destination) {
 			inDestFile >> len;
 			inDestFile.ignore();
 			char* user = new char[MAX_LEN];
-			inDestFile.get(user, len + 1);
+			inDestFile.get(user, len +1);
+		//	inDestFile.ignore(2);
 
 			openPersonalDb(user, true, destination);
 		}
@@ -305,7 +310,7 @@ void login() {
 		if (checkChar(dataFile, username)) {
 			if (checkChar(dataFile, password)) {
 				found = true;
-				openPersonalDb(createFileName(username));
+				openPersonalDb(username);
 				break;
 			}
 			else {
@@ -323,9 +328,9 @@ void login() {
 		throw std::exception("There is no such user!");
 	}
 
-	char* newName = createFileName(username);
+	//char* newName = createFileName(username);
 	do {
-		askForAddingDest(newName);
+		askForAddingDest(username);
 		searchForDestination();
 	} while (askQuestion("Would you like to continue: yes / no?"));
 
