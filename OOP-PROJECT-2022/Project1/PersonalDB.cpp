@@ -153,11 +153,6 @@ bool PersonalDB::validDates(const Date& start, const Date& end) const
 
 	return true;
 
-	/*return (start.getYear() <= end.getYear()) &&
-		((start.getDay() <= end.getDay()) && (start.getMonth() <= end.getMonth())) ||
-		((start.getDay() > end.getDay()) && (start.getMonth() < end.getMonth())) ||
-		((start.getDay() <= end.getDay()) && (start.getMonth() > end.getMonth()) && (start.getYear() < end.getYear())) ||
-		((start.getDay() > end.getDay()) && (start.getMonth() > end.getMonth()) && (start.getYear() < end.getYear()));*/
 }
 
 bool validExtension(const char* photo) {

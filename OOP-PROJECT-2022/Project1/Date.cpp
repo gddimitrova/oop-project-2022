@@ -14,9 +14,9 @@ Date::Date(int year, int month, int day)
     mYear = year;
 }
 
-//Date::Date(const Date& other):Date(other.getYear(), other.getMonth(), other.getDay())
-//{
-//}
+Date::Date(const Date& other):Date(other.getYear(), other.getMonth(), other.getDay())
+{
+}
 
 bool Date::isValidDate(int day, int month, int year) const
 {

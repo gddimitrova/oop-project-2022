@@ -32,6 +32,11 @@ char* readArgument(const char* description) {
 	return argument;
 }
 
+void freeMemory(const char* arg1, const char* arg2, const char* arg3) {
+	delete[] arg1;
+	delete[] arg2;
+	delete[] arg3;
+}
 
 bool checkChar(std::ifstream& in, const char* destination) {
 	size_t len;
@@ -186,17 +191,17 @@ void addNewExperience(const char* userName) {
 	} while (exCaught);
 
 	outFile << newPerson;
+	outFile.close();
 
 	addToDestinations(destination, userName);
 
-	outFile.close();
 
-	delete[] destination;
-	delete[] comment;
 	for (size_t i = 0; i < size; i++) {
 		delete photos[i];
 	}
 	delete[] photos;
+	delete[] destination;
+	delete[] comment;
 }
 
 
@@ -206,7 +211,8 @@ void askForAddingDest(const char* newName) {
 		addNewExperience(newName);
 	}
 	else {
-		std::ofstream perosnalOutFile(newName, std::ios::app);
+		char* name = createFileName(newName);
+		std::ofstream perosnalOutFile(name, std::ios::app);
 		perosnalOutFile.close();
 	}
 }
@@ -222,6 +228,7 @@ void searchForDestination() {
 		catch (std::exception& ex) {
 			std::cerr << ex.what() << std::endl;
 		}
+		delete[] destination;
 	}
 }
 
@@ -269,7 +276,7 @@ T openPersonalDb(const char* user,const bool searchingDest=false, const char* de
 			return sumGrades / countGrades;
 		}
 	}
-	
+
 }
 
 void printInfo(const char* destination) {
@@ -286,7 +293,6 @@ void printInfo(const char* destination) {
 			inDestFile.ignore();
 			char* user = new char[MAX_LEN];
 			inDestFile.get(user, len +1);
-		//	inDestFile.ignore(2);
 
 			sum += openPersonalDb<double>(user, true, destination);
 			count++;
@@ -339,19 +345,15 @@ void login() {
 		throw std::exception("There is no such user!");
 	}
 
-	//char* newName = createFileName(username);
 	do {
 		askForAddingDest(username);
 		searchForDestination();
 	} while (askQuestion("Would you like to continue: yes / no?"));
 
+	delete[] username;
+	delete[] password;
 }
 
-void freeMemory(const char* arg1, const char* arg2, const char* arg3) {
-	delete[] arg1;
-	delete[] arg2;
-	delete[] arg3;
-}
 
 void getStarted();
 
@@ -383,6 +385,7 @@ void signUp() {
 		outFile.close();
 			
 		freeMemory(username, password, email);
+	
 
 		getStarted();
 	}
